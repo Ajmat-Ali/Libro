@@ -14,7 +14,6 @@ const studentProfileSchema = new mongoose.Schema(
       type: String,
       unique: true,
       sparse: true,
-      default: null,
     },
 
     phone: {
@@ -90,6 +89,10 @@ const studentProfileSchema = new mongoose.Schema(
     isEmailVerified: {
       type: Boolean,
       default: false,
+    },
+    emailOtp: {
+      code: { type: String, default: null },
+      expiresAt: { type: Date, default: null },
     },
   },
   { timestamps: true },
