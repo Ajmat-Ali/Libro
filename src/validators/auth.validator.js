@@ -50,6 +50,14 @@ const validatePhone = (phone) => {
   }
 };
 
+const validateOtp = (otp) => {
+  if (!otp || otp.trim() === "") {
+    return "Otp is required";
+  } else if (!/^\d{6}$/.test(otp)) {
+    return "OTP must be exactly 6 digits";
+  }
+};
+
 const validateRegisterOwner = (data) => {
   const errors = {};
 
@@ -95,7 +103,23 @@ const validateRegisterStudent = (data) => {
   };
 };
 
+const validateVerifyEmail = (data) => {
+  const errors = {};
+
+  const emailError = validateEmail(data.email);
+  if (emailError) errors.email = emailError;
+
+  const otpError = validateOtp(data.otp);
+  if (otpError) errors.otp = otpError;
+
+  return {
+    errors,
+    isValid: Object.keys(errors).length === 0,
+  };
+};
+
 module.exports = {
   validateRegisterOwner,
   validateRegisterStudent,
+  validateVerifyEmail,
 };
