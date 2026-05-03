@@ -4,4 +4,10 @@ const ROLES = {
   STUDENT: "student",
 };
 
-module.exports = { ROLES };
+const APPROVAL_STATUS = {
+  PENDING: "pending",
+  ACCEPTED: "accepted",
+  REJECTED: "rejected",
+};
+
+module.exports = { ROLES, APPROVAL_STATUS };

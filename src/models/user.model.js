@@ -60,6 +60,13 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    refreshTokens: {
+      type: [String],
+      default: [],
+      // Array → supports multiple devices
+      // Logout current → remove one token
+      // Logout all → clear entire array
+    },
   },
   { timestamps: true },
 );

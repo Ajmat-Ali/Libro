@@ -24,21 +24,25 @@ const validateEmail = (email) => {
   }
 };
 
-const validatePassword = (password) => {
+const validatePassword = (password, option = { checkStrength: true }) => {
   if (!password || password.trim() === "") {
     return "Password is required";
-  } else if (password.length < 8) {
-    return "Password must be at least 8 characters";
-  } else if (
-    validator.isStrongPassword(password, {
-      minLength: 8,
-      minLowercase: 1,
-      minUppercase: 1,
-      minNumbers: 1,
-      minSymbols: 1,
-    }) === false
-  ) {
-    return "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 symbol";
+  }
+
+  if (option.checkStrength) {
+    if (password.length < 8) {
+      return "Password must be at least 8 characters";
+    } else if (
+      validator.isStrongPassword(password, {
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      }) === false
+    ) {
+      return "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 symbol";
+    }
   }
 };
 
@@ -58,6 +62,7 @@ const validateOtp = (otp) => {
   }
 };
 
+// validation Register Owner ________________________________________
 const validateRegisterOwner = (data) => {
   const errors = {};
 
@@ -79,6 +84,7 @@ const validateRegisterOwner = (data) => {
   };
 };
 
+// validate register Student _________________________________________
 const validateRegisterStudent = (data) => {
   const errors = {};
 
@@ -103,6 +109,7 @@ const validateRegisterStudent = (data) => {
   };
 };
 
+// validate Verify email and OTP_______________________________________
 const validateVerifyEmail = (data) => {
   const errors = {};
 
@@ -118,8 +125,41 @@ const validateVerifyEmail = (data) => {
   };
 };
 
+// validate Resend OTP_________________________________________________
+const validateResendOtp = (data) => {
+  const errors = {};
+
+  const emailError = validateEmail(data.email);
+  if (emailError) errors.email = emailError;
+
+  return {
+    errors,
+    isValid: Object.keys(errors).length === 0,
+  };
+};
+
+// validate login _____________________________________________________
+const validateLogin = (data) => {
+  const errors = {};
+
+  const emailError = validateEmail(data.email);
+  if (emailError) errors.email = emailError;
+
+  const passwordError = validatePassword(data.password, {
+    checkStrength: false,
+  });
+  if (passwordError) errors.password = passwordError;
+
+  return {
+    errors,
+    isValid: Object.keys(errors).length === 0,
+  };
+};
+
 module.exports = {
   validateRegisterOwner,
   validateRegisterStudent,
   validateVerifyEmail,
+  validateResendOtp,
+  validateLogin,
 };
