@@ -10,4 +10,6 @@ const APPROVAL_STATUS = {
   REJECTED: "rejected",
 };
 
-module.exports = { ROLES, APPROVAL_STATUS };
+const SALT_ROUND = 10;
+
+module.exports = { ROLES, APPROVAL_STATUS, SALT_ROUND };
