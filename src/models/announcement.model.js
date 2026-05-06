@@ -11,6 +11,7 @@ const announcementSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: [true, "Posted by reference is required"],
+      // Always owner/admin — only they can post announcements
     },
     title: {
       type: String,
@@ -33,6 +34,11 @@ const announcementSchema = new mongoose.Schema(
         message: "{VALUE} is not a valid priority",
       },
       default: "normal",
+      // normal    → general info (e.g. "Library closed Sunday")
+      // important → needs attention (e.g. "Fee due reminder")
+      // urgent    → immediate action (e.g. "Library closed today")
+      // Frontend shows different colors per priority
+      // urgent = red, important = yellow, normal = blue
     },
     targetAudience: {
       type: String,
@@ -41,21 +47,34 @@ const announcementSchema = new mongoose.Schema(
         message: "{VALUE} is not a valid target audience",
       },
       default: "all",
+      // all            → every student sees it
+      // active_members → only students with active booking
+      // defaulters     → only students with pending payment
+      // Controller filters who sees it based on this field
     },
     isActive: {
       type: Boolean,
       default: true,
+      // false → announcement deleted/hidden
+      // Soft delete — keep record, just hide from students
     },
     editedAt: {
       type: Date,
       default: null,
+      // null  → never edited
+      // filled → last edit timestamp
     },
   },
   { timestamps: true },
 );
 
+// ── INDEXES ──────────────────────────────────────────────────────
+
+// Student dashboard — fetch active announcements for their library
+// Most common query — latest first
 announcementSchema.index({ libraryId: 1, isActive: 1, createdAt: -1 });
 
+// Filter by priority — owner wants to see urgent ones first
 announcementSchema.index({ libraryId: 1, priority: 1, isActive: 1 });
 
 const Announcement = mongoose.model("Announcement", announcementSchema);

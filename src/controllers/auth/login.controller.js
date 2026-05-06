@@ -1,8 +1,8 @@
 const { validateLogin } = require("../../validators/auth/index.js");
-const User = require("../../models/user.model");
+const User = require("../../models/user.model.js");
 const { ROLES, APPROVAL_STATUS } = require("../../constants/index.js");
 const bcrypt = require("bcrypt");
-const StudentProfile = require("../../models/studentProfile.model");
+const StudentProfile = require("../../models/studentProfile.model.js");
 const jwt = require("jsonwebtoken");
 
 const login = async (req, res) => {

@@ -5,11 +5,11 @@ const auth = async (req, res, next) => {
   try {
     // 1 Get authorization
     const authorizationToken = req.headers.authorization;
-    if (!authorizationToken) {
+    if (!authorizationToken || !authorizationToken.startsWith("Bearer ")) {
       return res.status(401).json({ message: "Token is required" });
     }
-    // 2 extract accessToken from authorization
 
+    // 2 extract accessToken from authorization
     const accessToken = authorizationToken.split(" ")[1];
     if (!accessToken) {
       return res.status(401).json({ message: "Access token required" });

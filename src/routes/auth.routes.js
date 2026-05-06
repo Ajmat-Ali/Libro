@@ -11,6 +11,8 @@ const {
   logout,
   logoutAll,
   changePassword,
+  forgotPassword,
+  resetPassword,
 } = require("../controllers/auth/index");
 const auth = require("../middlewares/auth.middleware");
 
@@ -23,5 +25,7 @@ router.post("/refresh-token", refreshToken);
 router.post("/logout", logout);
 router.post("/logout-all", logoutAll);
 router.post("/change-password", auth, changePassword);
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword);
 
 module.exports = router;

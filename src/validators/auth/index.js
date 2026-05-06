@@ -4,6 +4,9 @@ const validateVerifyEmail = require("./validateVerifyEmail");
 const validateResendOtp = require("./validateResendOtp");
 const validateLogin = require("./validateLogin");
 const validateChangePassword = require("./validateChangePassword");
+const validateForgotPassword = require("./validateForgotPassword");
+const validateResetPassword = require("./validateResetPassword");
+const validateRegisterGuard = require("./validateRegisterGuard");
 
 module.exports = {
   validateRegisterOwner,
@@ -12,4 +15,7 @@ module.exports = {
   validateResendOtp,
   validateLogin,
   validateChangePassword,
+  validateForgotPassword,
+  validateResetPassword,
+  validateRegisterGuard,
 };
