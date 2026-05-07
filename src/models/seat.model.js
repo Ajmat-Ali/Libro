@@ -9,8 +9,6 @@ const seatSchema = new mongoose.Schema(
       required: [true, "Floor reference is required"],
     },
 
-    // Denormalized for performance
-    // Avoids double DB query when fetching all seats of library
     libraryId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Library",
@@ -52,11 +50,6 @@ const seatSchema = new mongoose.Schema(
       default: "general",
     },
 
-    // ─── Seat Status ──────────────────────────────────────────────────────────
-    // active      → physically fine, open for new bookings
-    // maintenance → temporarily broken, existing bookings kept, new blocked
-    // reserved    → owner holding it, new bookings blocked
-    // disabled    → permanently removed, never shows in seat map
     status: {
       type: String,
       required: [true, "Seat status is required"],
@@ -67,10 +60,6 @@ const seatSchema = new mongoose.Schema(
       default: "active",
     },
 
-    // ─── Status Audit Trail ───────────────────────────────────────────────────
-    // Tracks who changed status, when and why
-    // Important for owner accountability
-    // Only filled when status changes to maintenance/reserved/disabled
     statusUpdatedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -90,7 +79,6 @@ const seatSchema = new mongoose.Schema(
       // e.g. "Chair broken", "Reserved for VIP member"
     },
 
-    // ─── Description (Optional) ───────────────────────────────────────────────
     description: {
       type: String,
       trim: true,

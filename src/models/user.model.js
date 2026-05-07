@@ -33,13 +33,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Password is required"],
       minLength: [8, "Password must be at least 8 characters"],
-      // ⚠️ NO isStrongPassword validator here
-      // Reason: Pre-save bcrypt hook converts plain text → hash before saving.
-      // If document is saved again later (e.g. updating any other field),
-      // Mongoose would run isStrongPassword on the HASH — not original password
-      // → completely wrong behavior.
-      // ✅ Password strength is validated in validators/ layer instead.
-      // That layer runs BEFORE data reaches schema — clean separation.
     },
 
     phone: {
@@ -47,7 +40,6 @@ const userSchema = new mongoose.Schema(
       trim: true,
       validate: {
         validator: function (value) {
-          // Only validate if phone is provided (optional field)
           if (!value) return true;
           return validator.isMobilePhone(value, "en-IN");
         },
@@ -72,9 +64,6 @@ const userSchema = new mongoose.Schema(
     refreshTokens: {
       type: [String],
       default: [],
-      // Array → supports multiple devices
-      // Logout current → remove one token
-      // Logout all → clear entire array
     },
 
     passwordResetOtp: {
@@ -84,13 +73,6 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-
-// ─── Pre-save hook for bcrypt password hashing ────────────────────────────────
-// Written during Auth development (Step 5), NOT here.
-// Reason: Schema defines structure only.
-// Hashing logic belongs in the auth layer.
-// userSchema.pre("save", async function (next) { ... }) ← comes later
-// ─────────────────────────────────────────────────────────────────────────────
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;
