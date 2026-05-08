@@ -4,8 +4,6 @@ const validator = require("validator");
 const librarySchema = new mongoose.Schema(
   {
     // ─── Owner Reference ──────────────────────────────────────────────────────
-    // Which owner this library belongs to
-    // unique: true → one owner = one library
     ownerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
