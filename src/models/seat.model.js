@@ -34,7 +34,7 @@ const seatSchema = new mongoose.Schema(
       },
     },
 
-    // ─── Seat Type ────────────────────────────────────────────────────────────
+    // ─── Seat Type ────────────────────────────────────────────────────────────-
     // Used by Plan schema to determine pricing
     // General → standard seat
     // VIP     → premium seat

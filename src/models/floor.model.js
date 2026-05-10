@@ -66,9 +66,9 @@ const floorSchema = new mongoose.Schema(
 // Same floor number cannot exist twice in same library
 // e.g. Library cannot have two "Floor 1"
 // BUT different libraries CAN have same floor number
-// floorNumber 1 in Library A ✅
-// floorNumber 1 in Library B ✅
-// floorNumber 1 twice in Library A ❌
+// floorNumber 1 in Library A
+// floorNumber 1 in Library B
+// floorNumber 1 twice in Library A
 floorSchema.index({ libraryId: 1, number: 1 }, { unique: true });
 
 const Floor = mongoose.model("Floor", floorSchema);

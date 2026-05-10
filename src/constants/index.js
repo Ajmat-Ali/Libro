@@ -12,4 +12,6 @@ const APPROVAL_STATUS = {
 
 const SALT_ROUND = 10;
 
-module.exports = { ROLES, APPROVAL_STATUS, SALT_ROUND };
+const VALID_STATUSES = ["active", "maintenance", "reserved", "disabled"];
+
+module.exports = { ROLES, APPROVAL_STATUS, SALT_ROUND, VALID_STATUSES };
