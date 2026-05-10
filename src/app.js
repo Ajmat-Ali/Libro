@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/auth.routes");
 const ownerRoutes = require("./routes/owner.routes");
 const floorSeatRoutes = require("./routes/floorSeat.routes"); // floor and seat routes in same file
+const slotPlan = require("./routes/slotPlan.routes"); // slots and plan routes
 
 const app = express();
 
@@ -21,5 +22,6 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api/owner", ownerRoutes);
 app.use("/api/owner/floors", floorSeatRoutes);
+app.use("/api/owner", slotPlan);
 
 module.exports = app;

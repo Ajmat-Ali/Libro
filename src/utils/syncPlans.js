@@ -12,7 +12,7 @@ const syncPlans = async (libraryId) => {
     if (!existingLibrary) return;
 
     // ---------------------- 2 check if library has any seats and it's type ----------------------
-    const existingSeatTypes = Seat.distinct("seatType", { libraryId });
+    const existingSeatTypes = await Seat.distinct("seatType", { libraryId });
     if (existingSeatTypes.length === 0) return;
 
     // ---------------------- 3 if seat exist sync plan for each type of seat --------------------
@@ -27,7 +27,7 @@ const syncPlans = async (libraryId) => {
 
         const calculatedPrice = Math.round(rate * durationHours);
 
-        await Plan.findByIdAndUpdate(
+        await Plan.findOneAndUpdate(
           {
             libraryId,
             timeSlotId: slot._id,
@@ -39,7 +39,7 @@ const syncPlans = async (libraryId) => {
             calculatedPrice,
             isActive: true,
           },
-          { upsert: true, new: true },
+          { upsert: true, returnDocument: "after" },
         );
       }
     }

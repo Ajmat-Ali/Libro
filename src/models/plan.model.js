@@ -11,7 +11,7 @@ const planSchema = new mongoose.Schema(
       required: [true, "Library reference is required"],
     },
 
-    // ─── TimeSlot Reference ───────────────────────────────────────────────────
+    // ─── TimeSlot Reference ───────────────────────────────────────────────────_
     // Which time slot this plan is for
     // e.g. Morning slot / Evening slot / Night slot
     timeSlotId: {
