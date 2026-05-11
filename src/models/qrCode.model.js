@@ -87,7 +87,7 @@ const qrCodeSchema = new mongoose.Schema(
 // ── INDEXES ──────────────────────────────────────────────────────
 
 // Most critical index — guard scans token → this must be instant
-qrCodeSchema.index({ token: 1 });
+// qrCodeSchema.index({ token: 1 });
 
 // Check QR validity by student (student dashboard — show their QR)
 qrCodeSchema.index({ studentId: 1, status: 1 });
@@ -96,4 +96,5 @@ qrCodeSchema.index({ studentId: 1, status: 1 });
 qrCodeSchema.index({ status: 1, expiresAt: 1 });
 
 const QRCode = mongoose.model("QRCode", qrCodeSchema);
+
 module.exports = QRCode;
