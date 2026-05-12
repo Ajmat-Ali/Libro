@@ -27,3 +27,6 @@ app.use("/api/owner", slotPlanRoutes);
 app.use("/api/owner/members", memberRoutes);
 
 module.exports = app;
+
+// const razorpayInstance = require("./config/razorpay");
+// console.log(razorpayInstance);

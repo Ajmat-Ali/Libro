@@ -50,3 +50,24 @@
 > 11-05-2026| 8:16PM
 
 Member API
+
+# > 12-05-2026 | Booking
+
+### config
+
+- razorpay
+
+### Controller
+
+- ownerBooking
+- studentBooking
+- payment (Continue) tomorrow
+
+### utils
+
+- checkOverlap
+- generateQR.js
+
+### validator
+
+- booking.validator.js
