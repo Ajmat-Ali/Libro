@@ -33,7 +33,3 @@ app.use("/api/student/bookings", studentBookingRoutes);
 app.use("/api/payments", paymentRoutes);
 
 module.exports = app;
-
-// -------------------------------------- ----------------------------------
-// const razorpayInstance = require("./config/razorpay");
-// console.log(razorpayInstance);

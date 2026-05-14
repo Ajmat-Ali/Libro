@@ -4,7 +4,7 @@ const Library = require("../../models/library.model");
 const getAllFloor = async (req, res) => {
   try {
     // 1 check whether library created or not
-    console.log(req.user);
+
     const existingLibrary = await Library.findOne({ ownerId: req.user._id });
 
     if (!existingLibrary) {

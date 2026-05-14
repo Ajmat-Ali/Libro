@@ -46,7 +46,6 @@ const getAllMembers = async (req, res) => {
     // --------------6 Apply name/email search (in-memory — fine for small library dataset)-------------------------
     if (search && !/^\d+$/.test(search.trim())) {
       const searchLower = search.trim().toLowerCase();
-      console.log(searchLower);
 
       profiles = profiles.filter((p) => {
         const u = p.userId;
