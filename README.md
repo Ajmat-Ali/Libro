@@ -59,7 +59,7 @@ Member API
 
 ### Controller
 
-- ownerBooking
+- ownerBooking (Fixed and tested in postman)
 - studentBooking
 - payment (Continue) tomorrow
 
@@ -71,3 +71,9 @@ Member API
 ### validator
 
 - booking.validator.js
+
+--> Fixed update library to create sync plan
+
+# payment API:-
+
+- recordCashPayment is done including testing ✅

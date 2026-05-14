@@ -1,5 +1,6 @@
 const { validateUpdateLibrary } = require("../../validators/library.validator");
 const Library = require("../../models/library.model");
+const syncPlans = require("../../utils/syncPlans");
 
 // Helper function: Convert HH:MM to minutes from midnight
 const timeToMinutes = (timeString) => {
@@ -106,8 +107,6 @@ const updateLibrary = async (req, res) => {
         ...library.hourlyRates.toObject(),
         ...req.body.hourlyRates,
       };
-      // TODO: Call syncPlansForLibrary() to recalculate plans
-      // This will be implemented in Plan module
     }
 
     // Step 4 → Update library
@@ -116,6 +115,10 @@ const updateLibrary = async (req, res) => {
       updateData,
       { returnDocument: "after", runValidators: true },
     );
+
+    if (req.body.hourlyRates) {
+      syncPlans(library._id);
+    }
 
     // Step 5 → Return success response
     return res.status(200).json({

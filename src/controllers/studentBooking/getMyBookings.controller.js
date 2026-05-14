@@ -9,8 +9,9 @@ const getMyBookings = async (req, res) => {
     const skip = (pageNum - 1) * limitNum;
 
     // ------------ Students only see their own bookings ---------------
-    const filter = { studentId: req.user.id };
+    const filter = { studentId: req.user._id };
     if (status) filter.status = status;
+    console.log(filter);
 
     const total = await Booking.countDocuments(filter);
 

@@ -6,6 +6,7 @@ const QRCode = require("../../models/qrCode.model");
 const Seat = require("../../models/seat.model");
 const TimeSlot = require("../../models/timeSlot.model");
 const checkOverlap = require("../../utils/checkOverlap");
+const { v4: uuidv4 } = require("uuid");
 
 const extendBooking = async (req, res) => {
   try {
@@ -70,6 +71,7 @@ const extendBooking = async (req, res) => {
       newStartDate,
       newEndDate,
     );
+
     if (overlapping) {
       return res.status(409).json({
         message:

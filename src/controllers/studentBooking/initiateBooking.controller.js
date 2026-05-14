@@ -47,11 +47,18 @@ const initiateBooking = async (req, res) => {
 
     // ------------------------ 5 Check plan is active ----------------
     const plan = await Plan.findOne({
-      _id: req.body.planId,
       libraryId: library._id,
+      timeSlotId: timeSlot._id,
+      seatType: seat.seatType,
+      isActive: true,
     });
-    if (!plan || !plan.isActive) {
-      return res.status(404).json({ message: "Plan not found or disabled." });
+
+    if (!plan) {
+      // This means owner hasn't set hourlyRate for this seat type yet
+      // Or the plan was manually disabled
+      return res.status(400).json({
+        message: `No active plan found for "${seat.seatType}" seat with "${timeSlot.name}" slot. Please check your plan settings.`,
+      });
     }
 
     // ------------------------ 6 Calculate dates -------------------------

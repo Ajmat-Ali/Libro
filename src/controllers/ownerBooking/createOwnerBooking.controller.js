@@ -7,9 +7,12 @@ const StudentProfile = require("../../models/studentProfile.model");
 const TimeSlot = require("../../models/timeSlot.model");
 const User = require("../../models/user.model");
 const checkOverlap = require("../../utils/checkOverlap");
+const Booking = require("../../models/booking.model");
+const { v4: uuidv4 } = require("uuid");
+
 const {
   validateCreateOwnerBooking,
-} = require("../../validators/ownerBooking.validator");
+} = require("../../validators/booking.validator");
 
 const createOwnerBooking = async (req, res) => {
   try {
@@ -18,7 +21,7 @@ const createOwnerBooking = async (req, res) => {
     if (!isValid) return res.status(400).json({ errors });
 
     // ---------------------------2 Get Library --------------------
-    const library = await Library({ ownerId: req.user._id });
+    const library = await Library.findOne({ ownerId: req.user._id });
     if (!library) {
       return res.status(404).json({
         message: "Library not found. Please set up your library first.",
@@ -47,10 +50,12 @@ const createOwnerBooking = async (req, res) => {
     }
 
     // --------------- 4  Check seat exists and is bookable-------------------------------
+
     const seat = await Seat.findOne({
       _id: req.body.seatId,
       libraryId: library._id,
     });
+
     if (!seat) {
       return res.status(404).json({ message: "Seat not found." });
     }
@@ -73,14 +78,18 @@ const createOwnerBooking = async (req, res) => {
 
     // ---------------------- 6 Check plan exists and is active ---------------------------------
     const plan = await Plan.findOne({
-      _id: req.body.planId,
       libraryId: library._id,
+      timeSlotId: timeSlot._id, // slot the user picked
+      seatType: seat.seatType, // type derived from seat (cabin/vip/general/window)
+      isActive: true,
     });
+
     if (!plan) {
-      return res.status(404).json({ message: "Plan not found." });
-    }
-    if (!plan.isActive) {
-      return res.status(400).json({ message: "This plan is disabled." });
+      // This means owner hasn't set hourlyRate for this seat type yet
+      // Or the plan was manually disabled
+      return res.status(400).json({
+        message: `No active plan found for "${seat.seatType}" seat with "${timeSlot.name}" slot. Please check your plan settings.`,
+      });
     }
 
     // ---------------------- 7 Calculate dates --------------------------

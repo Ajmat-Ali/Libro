@@ -1,4 +1,5 @@
-// Validates input for creating a booking (owner side)
+// src/validators/booking/booking.validator.js
+
 const validateCreateOwnerBooking = (data) => {
   const errors = {};
 
@@ -14,19 +15,16 @@ const validateCreateOwnerBooking = (data) => {
     errors.timeSlotId = "Time slot is required";
   }
 
-  if (!data.planId || data.planId.trim() === "") {
-    errors.planId = "Plan is required";
-  }
+  // planId REMOVED — backend derives it automatically
+  // User cannot send planId anymore
 
   if (!data.startDate || data.startDate.toString().trim() === "") {
     errors.startDate = "Start date is required";
   } else {
     const date = new Date(data.startDate);
-    // isNaN check: "abc" is not a valid date
     if (isNaN(date.getTime())) {
       errors.startDate = "Start date must be a valid date";
     } else {
-      // Can't book in the past
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       if (date < today) {
@@ -38,8 +36,6 @@ const validateCreateOwnerBooking = (data) => {
   return { isValid: Object.keys(errors).length === 0, errors };
 };
 
-// Validates input for student initiating a booking (student side)
-// Same as above but no studentId (student is taken from JWT)
 const validateInitiateStudentBooking = (data) => {
   const errors = {};
 
@@ -51,9 +47,7 @@ const validateInitiateStudentBooking = (data) => {
     errors.timeSlotId = "Time slot is required";
   }
 
-  if (!data.planId || data.planId.toString().trim() === "") {
-    errors.planId = "Plan is required";
-  }
+  // planId REMOVED here too
 
   if (!data.startDate || data.startDate.toString().trim() === "") {
     errors.startDate = "Start date is required";
