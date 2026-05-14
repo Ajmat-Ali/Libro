@@ -5,6 +5,7 @@ const getOnePayment = require("./getOnePayment.controller");
 const getRevenueSummary = require("./getRevenueSummary.controller");
 
 module.exports = {
+  handleWebhook,
   recordCashPayment,
   getAllPayments,
   getOnePayment,

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const {
+  handleWebhook,
   recordCashPayment,
   getAllPayments,
   getOnePayment,
@@ -10,6 +11,8 @@ const {
 
 const auth = require("../middlewares/auth.middleware");
 const restrictTo = require("../middlewares/restrictTo.middleware");
+
+router.post("/webhook", handleWebhook);
 
 router.use(auth, restrictTo("owner"));
 

@@ -17,8 +17,9 @@ const handleWebhook = async (req, res) => {
       console.error("No webhook signature found in headers");
       return res.status(400).json({ message: "Invalid request." });
     }
-    if (!receivedSignature) {
-      return res.status(400).json({ message: "No signature found." });
+    if (!webhookSignature) {
+      console.error("No webhook signature found in headers");
+      return res.status(400).json({ message: "Invalid request." });
     }
 
     // ------------------- Verify signature -------------------------
