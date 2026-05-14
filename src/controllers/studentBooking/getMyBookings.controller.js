@@ -11,7 +11,6 @@ const getMyBookings = async (req, res) => {
     // ------------ Students only see their own bookings ---------------
     const filter = { studentId: req.user._id };
     if (status) filter.status = status;
-    console.log(filter);
 
     const total = await Booking.countDocuments(filter);
 
