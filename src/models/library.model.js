@@ -3,7 +3,6 @@ const validator = require("validator");
 
 const librarySchema = new mongoose.Schema(
   {
-    // ─── Owner Reference ──────────────────────────────────────────────────────
     ownerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -11,7 +10,6 @@ const librarySchema = new mongoose.Schema(
       unique: true,
     },
 
-    // ─── Basic Information ────────────────────────────────────────────────────
     name: {
       type: String,
       required: [true, "Library name is required"],
@@ -25,8 +23,6 @@ const librarySchema = new mongoose.Schema(
       trim: true,
       maxLength: [500, "Description cannot exceed 500 characters"],
       default: null,
-      // Optional — shown on student registration page
-      // e.g. "Best library in Patna — open since 2010"
     },
 
     logo: {
@@ -40,13 +36,8 @@ const librarySchema = new mongoose.Schema(
         },
         message: "Invalid logo URL. Must be a valid Cloudinary URL",
       },
-      // Format validation → handled in Multer middleware
-      // Allowed formats → JPG, PNG only | Max size → 2MB
     },
 
-    // ─── Address (Nested Object) ──────────────────────────────────────────────
-    // Stored as structured object — not plain string
-    // Reason → city/state needed separately in reports
     address: {
       street: {
         type: String,
@@ -72,7 +63,6 @@ const librarySchema = new mongoose.Schema(
         trim: true,
         validate: {
           validator: function (value) {
-            // Indian pincode → exactly 6 digits, cannot start with 0
             return /^[1-9][0-9]{5}$/.test(value);
           },
           message: "Please enter a valid 6 digit Indian pincode",
@@ -80,7 +70,6 @@ const librarySchema = new mongoose.Schema(
       },
     },
 
-    // ─── Contact Information (Nested Object) ─────────────────────────────────
     contact: {
       phone: {
         type: String,
@@ -109,7 +98,6 @@ const librarySchema = new mongoose.Schema(
         default: null,
         validate: {
           validator: function (value) {
-            // Only validate if website provided (optional)
             if (!value) return true;
             return validator.isURL(value);
           },
@@ -118,18 +106,6 @@ const librarySchema = new mongoose.Schema(
       },
     },
 
-    // ─── Timings (Nested Object) ──────────────────────────────────────────────
-    // openingTime/closingTime → HH:MM string (for display)
-    // openingTimeMinutes/closingTimeMinutes → for slot validation
-    //
-    // WHY store both?
-    // → Display → use HH:MM string directly ✅
-    // → Slot validation → use minutes for comparison ✅
-    // → Avoid converting on every request ✅
-    //
-    // Controller calculates minutes before saving:
-    // "06:00" → 6 × 60 = 360 minutes
-    // "05:00" next day → 300 + 1440 = 1740 minutes
     timings: {
       openingTime: {
         type: String,
@@ -157,23 +133,14 @@ const librarySchema = new mongoose.Schema(
         required: [true, "Opening time in minutes is required"],
         min: [0, "Opening time cannot be negative"],
         max: [1439, "Opening time cannot exceed 23:59"],
-        // Auto calculated in controller — never entered manually
-        // e.g. "06:00" → 6 × 60 = 360
       },
       closingTimeMinutes: {
         type: Number,
         required: [true, "Closing time in minutes is required"],
         min: [1, "Closing time cannot be zero"],
-        // No max → closing time can cross midnight
-        // e.g. "05:00" next day → 300 + 1440 = 1740
-        // Controller calculates this automatically
       },
     },
 
-    // ─── Working Days (Array of Strings) ─────────────────────────────────────
-    // Only store days that are OPEN
-    // Missing day = closed that day
-    // e.g. Sunday missing = Sunday closed
     workingDays: {
       type: [String],
       enum: {
@@ -205,11 +172,7 @@ const librarySchema = new mongoose.Schema(
       },
     },
 
-    // ─── Holidays (Array of Subdocuments) ────────────────────────────────────
-    // Specific one-time dates when library is closed
-    // Different from workingDays:
-    // workingDays → repeats every week
-    // holidays    → specific one-time dates only
+    // -----------  Holidays (Array of Subdocuments) -----------------------
     holidays: [
       {
         date: {
@@ -225,20 +188,6 @@ const librarySchema = new mongoose.Schema(
       },
     ],
 
-    // ─── Hourly Rates Per Seat Type ───────────────────────────────────────────
-    // Owner sets price per hour for each seat type
-    // System uses these rates to AUTO CREATE plans when:
-    // → New time slot is created
-    // → New seat type is added
-    // → Owner updates any rate
-    //
-    // Formula → calculatedPrice = hourlyRate × (slotDurationMinutes / 60)
-    // e.g. General(₹20) + 6hr slot → 20 × 6 = ₹120/month
-    //
-    // When rate updated:
-    // → All plans for that seat type recalculated ✅
-    // → Existing bookings untouched ✅ (price snapshot on booking)
-    // → New bookings use new price ✅
     hourlyRates: {
       general: {
         type: Number,
@@ -262,12 +211,9 @@ const librarySchema = new mongoose.Schema(
       },
     },
 
-    // ─── Library Status ───────────────────────────────────────────────────────
     isActive: {
       type: Boolean,
       default: true,
-      // false → library temporarily shut down
-      // All bookings/logins blocked when false
     },
   },
   { timestamps: true },

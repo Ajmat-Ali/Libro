@@ -77,3 +77,5 @@ Member API
 # payment API:-
 
 - recordCashPayment is done including testing ✅
+
+continue --> ownerQR

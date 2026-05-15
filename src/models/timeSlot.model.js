@@ -48,7 +48,6 @@ const timeSlotSchema = new mongoose.Schema(
       trim: true,
     },
 
-    // ─── Slot Status ──────────────────────────────────────────────────────────
     isActive: {
       type: Boolean,
       default: true,
