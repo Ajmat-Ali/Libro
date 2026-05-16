@@ -9,9 +9,10 @@ const memberRoutes = require("./routes/member.routes");
 const ownerBookingRoutes = require("./routes/ownerBooking.routes");
 const studentBookingRoutes = require("./routes/studentBooking.routes");
 const paymentRoutes = require("./routes/payment.routes");
-const studentQrRoutes = require("./routes/studentQr.routes");
+const studentQrRoutes = require("./routes/studentQR.routes");
 const guardQrRoutes = require("./routes/guard.routes");
-const ownerQrRoutes = require("./routes/ownerQr.routes");
+const ownerQrRoutes = require("./routes/ownerQR.routes");
+const attendanceRoutes = require("./routes/attendance.routes");
 
 const app = express();
 
@@ -37,5 +38,6 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/student/my-qr", studentQrRoutes);
 app.use("/api/guard", guardQrRoutes);
 app.use("/api/owner", ownerQrRoutes);
+app.use("/api/attendance", attendanceRoutes);
 
 module.exports = app;
