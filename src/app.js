@@ -13,6 +13,7 @@ const studentQrRoutes = require("./routes/studentQR.routes");
 const guardQrRoutes = require("./routes/guard.routes");
 const ownerQrRoutes = require("./routes/ownerQR.routes");
 const attendanceRoutes = require("./routes/attendance.routes");
+const dashboardRoutes = require("./routes/dashboard.routes");
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/student/my-qr", studentQrRoutes);
 app.use("/api/guard", guardQrRoutes);
 app.use("/api/owner", ownerQrRoutes);
-app.use("/api/attendance", attendanceRoutes);
+app.use("/api", attendanceRoutes);
+app.use("/api", dashboardRoutes);
 
 module.exports = app;

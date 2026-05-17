@@ -1,3 +1,4 @@
+const Attendance = require("../../models/attendance.model");
 const Library = require("../../models/library.model");
 
 const getStudentAttendance = async (req, res) => {

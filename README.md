@@ -79,3 +79,9 @@ Member API
 - recordCashPayment is done including testing ✅
 
 continue --> ownerQR
+
+<!-- ------------------------ -->
+
+16/05/26
+
+getMyAttendance :=> Continue tomorrow

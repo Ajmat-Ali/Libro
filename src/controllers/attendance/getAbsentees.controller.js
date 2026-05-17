@@ -32,7 +32,7 @@ const getAbsentees = async (req, res) => {
     });
 
     // ------------------------- Build set of bookingId -------------
-    const presentBookingIds = set(
+    const presentBookingIds = new Set(
       todayAttendance.map((a) => a.bookingId.toString()),
     );
 
@@ -54,8 +54,8 @@ const getAbsentees = async (req, res) => {
     // ---------------- Return success message ---------------------
     return res.status(200).json({
       date: startOfDay,
-      totalAbsent: absentees.length,
-      absentees,
+      totalAbsent: getAbsentees.length,
+      absentees: getAbsentees,
     });
   } catch (error) {
     console.error("getAbsentees error:", error.message);

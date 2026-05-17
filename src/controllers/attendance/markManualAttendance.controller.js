@@ -23,12 +23,20 @@ const markManualAttendance = async (req, res) => {
       });
     }
 
-    // ------------------------- erify booking existance -----------
+    // ------------------------- verify booking existance -----------
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+
     const booking = await Booking.findOne({
       _id: bookingId,
       libraryId: library._id,
       studentId: studentId,
       status: "active",
+      startDate: { $lte: endOfDay },
+      endDate: { $gte: startOfDay },
     });
     if (!booking) {
       return res.status(404).json({
@@ -48,7 +56,7 @@ const markManualAttendance = async (req, res) => {
     if (existingAttendance) {
       return res.status(409).json({
         message: "Attendance already marked for this student on this date.",
-        existingRecord: existing,
+        existingRecord: existingAttendance,
       });
     }
 
@@ -62,7 +70,7 @@ const markManualAttendance = async (req, res) => {
       entryTime: new Date(),
       status: "present",
       markedHow: "manual",
-      markedBy: req.user.id,
+      markedBy: req.user._id,
     });
 
     // ------------------------- Return success message ------------------
