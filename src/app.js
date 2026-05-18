@@ -14,6 +14,7 @@ const guardQrRoutes = require("./routes/guard.routes");
 const ownerQrRoutes = require("./routes/ownerQR.routes");
 const attendanceRoutes = require("./routes/attendance.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
+const studentProfileRoutes = require("./routes/studentProfile.routes");
 
 const app = express();
 
@@ -41,5 +42,6 @@ app.use("/api/guard", guardQrRoutes);
 app.use("/api/owner", ownerQrRoutes);
 app.use("/api", attendanceRoutes);
 app.use("/api", dashboardRoutes);
+app.use("/api/student", studentProfileRoutes);
 
 module.exports = app;

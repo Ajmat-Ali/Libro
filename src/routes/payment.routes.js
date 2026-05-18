@@ -7,6 +7,7 @@ const {
   getAllPayments,
   getOnePayment,
   getRevenueSummary,
+  downloadReceipt,
 } = require("../controllers/payment/index");
 
 const auth = require("../middlewares/auth.middleware");
@@ -20,5 +21,6 @@ router.get("/revenue-summary", getRevenueSummary);
 router.get("/", getAllPayments);
 router.post("/:paymentId/record-cash", recordCashPayment);
 router.get("/:paymentId", getOnePayment);
+router.get("/:paymentId/receipt", downloadReceipt);
 
 module.exports = router;
