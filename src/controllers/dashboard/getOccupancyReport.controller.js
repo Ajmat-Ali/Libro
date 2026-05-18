@@ -63,7 +63,7 @@ const getOccupancyReport = async (req, res) => {
 
     const slotReport = await Promise.all(
       slots.map(async (slot) => {
-        const seats = await Booking.countDocuments({
+        const bookingsForSlot = await Booking.countDocuments({
           libraryId: library._id,
           timeSlotId: slot._id,
           status: "active",
@@ -93,5 +93,3 @@ const getOccupancyReport = async (req, res) => {
 };
 
 module.exports = getOccupancyReport;
-
-// COntinue To test api in postman then build other left api

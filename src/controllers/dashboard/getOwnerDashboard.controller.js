@@ -161,8 +161,6 @@ const getOwnerDashboard = async (req, res) => {
         .limit(5),
     ]);
 
-    console.log(todayRevenue);
-
     // -------------------- Calculate occupancy rate ---------------------
     // What % of seats are currently booked
     const occupancyRate =
