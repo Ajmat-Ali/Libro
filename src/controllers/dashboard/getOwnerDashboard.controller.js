@@ -121,7 +121,7 @@ const getOwnerDashboard = async (req, res) => {
       // 9. Today's attendance count
       Attendance.countDocuments({
         libraryId: library._id,
-        date: { $gte: todayStart },
+        date: { $gte: todayStart, $lte: todayEnd },
       }),
 
       // 10. Today's failed scans
