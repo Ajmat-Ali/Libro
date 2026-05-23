@@ -39,7 +39,7 @@ const updateMember = async (req, res) => {
           .json({ message: "Phone number already in use." });
       }
       profile.phone = req.body.phone.trim();
-      user.phone = req.body.phone.trim(); // keep in sync
+      user.phone = req.body.phone.trim();
     }
 
     // -------------------------- 4 Update User fields -------------------------------------------
@@ -61,7 +61,7 @@ const updateMember = async (req, res) => {
       message: "Member details updated successfully.",
     });
   } catch (error) {
-    console.error("updateMember error:", err.message);
+    console.error("updateMember error:", error.message);
     return res
       .status(500)
       .json({ message: "Something went wrong. Please try again." });

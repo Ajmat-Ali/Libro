@@ -7,6 +7,7 @@ const reviewMember = async (req, res) => {
     const { action, rejectionReason } = req.body;
 
     //-------------------- 1 validate action -----------------
+
     if (!action || !["approve", "reject"].includes(action)) {
       return res.status(400).json({
         message: "action must be either 'approve' or 'reject'",
@@ -25,7 +26,7 @@ const reviewMember = async (req, res) => {
 
     //----------------------- 3 Get member ------------------
     const profile = await StudentProfile.findOne({
-      userId: memberId,
+      _id: memberId,
     });
     if (!profile) {
       return res.status(404).json({ message: "Member not found." });

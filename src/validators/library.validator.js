@@ -121,6 +121,7 @@ const validateCreateLibrary = (data) => {
   if (nameError) errors.name = nameError;
 
   // timings is required object
+
   if (!data.timings) {
     errors.timings = "Timings are required";
   } else {

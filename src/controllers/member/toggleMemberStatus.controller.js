@@ -6,7 +6,8 @@ const toggleMemberStatus = async (req, res) => {
   try {
     const { memberId } = req.params;
 
-    // ------------- 1 Get user (Only student) -----------------
+    // ------------- 1 Get user (Only student) ----------------
+
     const user = await User.findOne({
       _id: memberId,
       role: ROLES.STUDENT,

@@ -20,6 +20,7 @@ const getAllMembers = async (req, res) => {
 
     // -------------- 2  Build profile filter -------------------------
     const profileFilter = {};
+
     if (approvalStatus) {
       const validStatuses = ["pending", "approved", "rejected"];
       if (!validStatuses.includes(approvalStatus)) {

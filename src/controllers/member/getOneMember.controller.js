@@ -5,8 +5,9 @@ const Payment = require("../../models/payment.model");
 const getOneMember = async (req, res) => {
   try {
     const { memberId } = req.params; // userId only is memberId
+
     // -------------- 1 Get studentProfile ----------------
-    const profile = await StudentProfile.findOne({ userId: memberId })
+    const profile = await StudentProfile.findOne({ _id: memberId })
       .populate("userId", "-password -refreshTokens -passwordResetOtp")
       .select("-emailOtp");
     if (!profile || !profile.userId) {
