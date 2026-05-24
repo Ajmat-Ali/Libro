@@ -1,5 +1,6 @@
 const Booking = require("../../models/booking.model");
 const Library = require("../../models/library.model");
+const User = require("../../models/user.model");
 
 const getAllBookings = async (req, res) => {
   try {
@@ -11,6 +12,7 @@ const getAllBookings = async (req, res) => {
 
     // --------------------- 2 Get all variable from Quesry params ----------------
     const {
+      search,
       status,
       studentId,
       slotId,
@@ -41,8 +43,24 @@ const getAllBookings = async (req, res) => {
 
     const total = await Booking.countDocuments(filter);
 
+    let studentIds = [];
+
+    if (search && !filter.studentId) {
+      const students = await User.find({
+        $or: [
+          { firstName: { $regex: search, $options: "i" } },
+          { lastName: { $regex: search, $options: "i" } },
+          { email: { $regex: search, $options: "i" } },
+        ],
+      }).select("_id");
+
+      studentIds = students.map((s) => s._id);
+
+      filter.studentId = { $in: studentIds };
+    }
+
     // ------------------------------- 4 Get booking data ----------------------------
-    const bookings = await Booking.find(filter)
+    let bookings = await Booking.find(filter)
       .populate("studentId", "firstName lastName email phone")
       .populate("seatId", "seatLabel seatType")
       .populate("timeSlotId", "name startTimeDisplay endTimeDisplay")
@@ -50,6 +68,10 @@ const getAllBookings = async (req, res) => {
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limitNum);
+
+    // console.log(bookings);
+
+    // -------------------- Search By Name and email -----------------
 
     // ------------------------------- 5 Success message ---------------------
     return res.status(200).json({

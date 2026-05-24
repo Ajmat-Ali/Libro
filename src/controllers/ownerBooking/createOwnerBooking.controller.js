@@ -85,8 +85,6 @@ const createOwnerBooking = async (req, res) => {
     });
 
     if (!plan) {
-      // This means owner hasn't set hourlyRate for this seat type yet
-      // Or the plan was manually disabled
       return res.status(400).json({
         message: `No active plan found for "${seat.seatType}" seat with "${timeSlot.name}" slot. Please check your plan settings.`,
       });
@@ -102,6 +100,7 @@ const createOwnerBooking = async (req, res) => {
 
     // ------------------------- 8 Check startDate is a working day ---------------------
     const dayName = startDate.toLocaleDateString("en-US", { weekday: "long" });
+
     if (!library.workingDays.includes(dayName)) {
       return res.status(400).json({
         message: `${dayName} is not a working day for this library.`,
@@ -130,7 +129,6 @@ const createOwnerBooking = async (req, res) => {
     if (overlapping) {
       return res.status(409).json({
         message: `Seat "${seat.seatLabel}" is already booked for this slot.`,
-        // Tell owner when the existing booking ends so they can plan accordingly
         existingBookingEnds: overlapping.endDate,
       });
     }

@@ -44,11 +44,6 @@ const bookingSchema = new mongoose.Schema(
         message: "{VALUE} is not a valid booking status",
       },
       default: "pending",
-      // pending   → student submitted, waiting for admin
-      // active    → admin approved OR admin created directly
-      // expired   → endDate passed (checked at scan time / cron)
-      // cancelled → admin cancelled an active booking
-      // rejected  → admin rejected a pending booking
     },
     price: {
       type: Number,
