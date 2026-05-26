@@ -12,6 +12,7 @@ const getAllMembers = async (req, res) => {
       isActive,
       page = 1,
       limit = 10,
+      userId,
     } = req.query;
 
     const pageNum = Math.max(1, parseInt(page) || 1);
@@ -35,6 +36,10 @@ const getAllMembers = async (req, res) => {
     if (search && /^\d+$/.test(search.trim())) {
       profileFilter.phone = { $regex: search.trim(), $options: "i" };
     }
+
+    // --------------------- 3.1 ---------------------------
+
+    if (userId) profileFilter.userId = userId;
 
     // --------------4 Get all profile with user data populated -------------------------
     let profiles = await StudentProfile.find(profileFilter)

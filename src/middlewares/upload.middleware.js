@@ -18,6 +18,6 @@ const upload = multer({
   },
 });
 
-const uploadSingle = upload.single("image");
+const uploadSingle = upload.single("logo");
 
 module.exports = { uploadSingle };

@@ -22,6 +22,7 @@ const getStudentQRList = async (req, res) => {
         { path: "seatId", select: "seatLabel seatType" },
         { path: "timeSlotId", select: "name startTimeDisplay endTimeDisplay" },
       ],
+      select: "_id",
     });
     if (qrCodes.length === 0) {
       return res.status(404).json({
@@ -35,12 +36,13 @@ const getStudentQRList = async (req, res) => {
         qrId: qr._id,
         expiresAt: qr.expiresAt,
         booking: {
-          seat: qr.bookingId.seatId
+          seat: qr?.bookingId?.seatId
             ? `${qr.bookingId.seatId.seatLabel} (${qr.bookingId.seatId.seatType})`
             : "N/A",
-          slot: qr.bookingId.timeSlotId
+          slot: qr?.bookingId?.timeSlotId
             ? `${qr.bookingId.timeSlotId.name} — ${qr.bookingId.timeSlotId.startTimeDisplay} to ${qr.bookingId.timeSlotId.endTimeDisplay}`
             : "N/A",
+          bookingId: qr?.bookingId?._id,
         },
       };
     });
