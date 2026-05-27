@@ -40,7 +40,7 @@ const scanQR = async (req, res) => {
     if (!qrCode) {
       await createLog("failed", "invalid_token");
 
-      return res.status(200).json({
+      return res.status(404).json({
         scanResult: "failed",
         color: "RED",
         reason: "Invalid QR code. This QR does not belong to this library.",
@@ -64,6 +64,7 @@ const scanQR = async (req, res) => {
 
     // ------------------------ Check is QR Expired ---------------
     const now = Date.now();
+
     if (qrCode.expiresAt < now) {
       qrCode.status = "expired";
       await qrCode.save();
@@ -142,14 +143,18 @@ const scanQR = async (req, res) => {
       message: "Entry allowed.",
       student: {
         name: `${student.firstName} ${student.lastName}`,
-        photo: student.photo || null, // show student photo to guard
+        photo: student.photo || null,
+        email: student.email || null,
       },
       booking: {
-        seat: booking.seatId
-          ? `${booking.seatId.seatLabel} (${booking.seatId.seatType})`
+        seat: booking.seatId ? `${booking.seatId.seatLabel} ` : "N/A",
+        seatType: booking.seatId ? `${booking.seatId.seatType}` : "N/A",
+        slotName: booking.timeSlotId ? `${booking.timeSlotId.name} ` : "N/A",
+        startTime: booking.timeSlotId
+          ? ` ${booking.timeSlotId.startTimeDisplay}`
           : "N/A",
-        slot: booking.timeSlotId
-          ? `${booking.timeSlotId.name} ${booking.timeSlotId.startTimeDisplay} - ${booking.timeSlotId.endTimeDisplay}`
+        endTime: booking.timeSlotId
+          ? ` ${booking.timeSlotId.endTimeDisplay}`
           : "N/A",
         validUntil: booking.endDate,
       },
