@@ -50,6 +50,7 @@ const registerStudent = async (req, res) => {
     const studentProfile = await StudentProfile.create({
       userId: student._id,
       phone: student.phone,
+      address: req.body.address.trim() ? req.body.address.trim() : null,
     });
 
     // 6. generate OTP
