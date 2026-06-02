@@ -9,6 +9,7 @@ const login = async (req, res) => {
   try {
     // 1 validate req body {email, password}
     const { errors, isValid } = validateLogin(req.body);
+
     if (!isValid) {
       return res.status(400).json({ errors });
     }
@@ -17,8 +18,9 @@ const login = async (req, res) => {
     const user = await User.findOne({
       email: req.body.email.toLowerCase().trim(),
     });
+
     if (!user) {
-      return res.status(404).json({ message: "Invalid credential" });
+      return res.status(400).json({ message: "Invalid credential" });
     }
 
     // 3 check password (compare password with bcrypt)
@@ -26,8 +28,9 @@ const login = async (req, res) => {
       req.body.password,
       user.password,
     );
+
     if (!isPasswordCorrect) {
-      return res.status(401).json({ message: "Invalid credential" });
+      return res.status(400).json({ message: "Invalid credential" });
     }
 
     // 4 isActive (does user is active)
@@ -44,6 +47,7 @@ const login = async (req, res) => {
       if (!studentProfile) {
         return res.status(404).json({ message: "Student profile not found" });
       }
+
       // 5.1.1 Check is email verified
       if (!studentProfile.isEmailVerified) {
         return res

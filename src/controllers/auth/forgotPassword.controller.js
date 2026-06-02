@@ -18,7 +18,7 @@ const forgotPassword = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(401).json({ message: "No account found" });
+      return res.status(404).json({ message: "No account found" });
     }
     // 3 Generate Otp for forgot password and expiry time
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
