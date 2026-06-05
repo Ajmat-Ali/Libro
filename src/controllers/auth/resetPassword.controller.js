@@ -15,7 +15,7 @@ const resetPassword = async (req, res) => {
       email: req.body.email.toLowerCase().trim(),
     });
     if (!user) {
-      return res.status(401).json({ message: "No account found" });
+      return res.status(404).json({ message: "No account found" });
     }
 
     // 3 check whether user has request OTP or not
@@ -37,7 +37,7 @@ const resetPassword = async (req, res) => {
       user.passwordResetOtp.code,
     );
     if (!isValidOtp) {
-      return res.status(401).json({ message: "Invalid OTP" });
+      return res.status(404).json({ message: "Invalid OTP" });
     }
 
     // 5 clear all refresh Token
