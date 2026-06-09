@@ -5,6 +5,7 @@ const getOneSeat = require("./getOneSeat.controller");
 const updateSeat = require("./updateSeat.controller");
 const updateSeatStatus = require("./updateSeatStatus.controller");
 const deleteSeat = require("./deleteSeat.controller");
+const seatGrid = require("./seatGrid.controller");
 
 module.exports = {
   createSeat,
@@ -14,4 +15,5 @@ module.exports = {
   updateSeat,
   updateSeatStatus,
   deleteSeat,
+  seatGrid,
 };

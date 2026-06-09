@@ -140,12 +140,12 @@ const createOwnerBooking = async (req, res) => {
       seatId: seat._id,
       timeSlotId: timeSlot._id,
       planId: plan._id,
-      bookedBy: req.user._id, // owner created this booking
-      status: "active", // owner booking = directly active
-      price: plan.calculatedPrice, // SNAPSHOT of today's price
+      bookedBy: req.user._id,
+      status: "active",
+      price: plan.calculatedPrice,
       startDate: startDate,
       endDate: endDate,
-      approvedBy: req.user._id, // owner is auto-approver for own bookings
+      approvedBy: req.user._id,
       approvedAt: new Date(),
     });
 
@@ -163,9 +163,9 @@ const createOwnerBooking = async (req, res) => {
     const qrCode = await QRCode.create({
       bookingId: booking._id,
       studentId: student._id,
-      token: uuidv4(), // unique random token for this booking
+      token: uuidv4(),
       status: "active",
-      expiresAt: endDate, // QR becomes invalid when booking period ends
+      expiresAt: endDate,
     });
 
     // ----------------------- Success message ---------------------------

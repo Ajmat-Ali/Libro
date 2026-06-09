@@ -26,6 +26,12 @@ const createLibrary = async (req, res) => {
       });
     }
 
+    // -------------- Don't create morethan one library ----------------
+    const doesLibExist = await Library.find();
+    if (doesLibExist) {
+      return res.status(409).json({ message: "Library already exist" });
+    }
+
     // Step 3 → Convert opening and closing times to minutes
     const openingTimeMinutes = timeToMinutes(req.body.timings.openingTime);
     let closingTimeMinutes = timeToMinutes(req.body.timings.closingTime);

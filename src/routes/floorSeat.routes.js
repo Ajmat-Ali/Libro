@@ -37,6 +37,7 @@ const {
   updateSeat,
   updateSeatStatus,
   deleteSeat,
+  seatGrid,
 } = require("../controllers/seat/index");
 
 router.post("/:floorId/seats/bulk", auth, restrictTo("owner"), bultCreateSeat);
@@ -51,5 +52,6 @@ router.patch(
 );
 router.patch("/:floorId/seats/:seatId", auth, restrictTo("owner"), updateSeat);
 router.delete("/:floorId/seats/:seatId", auth, restrictTo("owner"), deleteSeat);
+router.get("/:floorId/seat-grid", auth, restrictTo("owner"), seatGrid);
 
 module.exports = router;
