@@ -31,7 +31,7 @@ router.delete("/:floorId", auth, restrictTo("owner"), deleteFloor);
 
 const {
   createSeat,
-  bultCreateSeat,
+  bulkCreateSeat,
   getAllSeats,
   getOneSeat,
   updateSeat,
@@ -40,7 +40,7 @@ const {
   seatGrid,
 } = require("../controllers/seat/index");
 
-router.post("/:floorId/seats/bulk", auth, restrictTo("owner"), bultCreateSeat);
+router.post("/:floorId/seats/bulk", auth, restrictTo("owner"), bulkCreateSeat);
 router.post("/:floorId/seats", auth, restrictTo("owner"), createSeat);
 router.get("/:floorId/seats", auth, restrictTo("owner"), getAllSeats);
 router.get("/:floorId/seats/:seatId", auth, restrictTo("owner"), getOneSeat);

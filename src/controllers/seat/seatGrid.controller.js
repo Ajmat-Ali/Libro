@@ -20,7 +20,7 @@ const seatGrid = async (req, res) => {
       });
     }
 
-    // Validate MongoDB ObjectIds
+    // validate object id
     if (
       !mongoose.Types.ObjectId.isValid(floorId) ||
       !mongoose.Types.ObjectId.isValid(slot)
@@ -31,7 +31,7 @@ const seatGrid = async (req, res) => {
       });
     }
 
-    // VALIDATE DATE
+    // validate date
     let queryDate = new Date();
     if (date) {
       queryDate = new Date(date);
@@ -53,7 +53,7 @@ const seatGrid = async (req, res) => {
       });
     }
 
-    // Verify library ownership
+    // Verify librray ownership
     const library = await Library.findOne({
       ownerId: req.user._id,
     });
@@ -215,6 +215,7 @@ const seatGrid = async (req, res) => {
           expiringSoon,
         },
         floor: floor,
+        slot: timeSlot,
         seats: result,
       },
     });

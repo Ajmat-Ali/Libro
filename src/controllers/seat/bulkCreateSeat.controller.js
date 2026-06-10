@@ -5,10 +5,12 @@ const Seat = require("../../models/seat.model");
 const { validateCreateSeat } = require("../../validators/seat.validator");
 const syncPlans = require("../../utils/syncPlans");
 
-const bultCreateSeat = async (req, res) => {
+const bulkCreateSeat = async (req, res) => {
   try {
     // ------------------------ Get floorId from req.params -----
     const { floorId } = req.params;
+
+    // console.log(req.body);
 
     // ------------------ 1 Validate bulk seat to check is it array or not -------------------
     if (!Array.isArray(req.body.seats) || req.body.seats.length === 0) {
@@ -71,11 +73,14 @@ const bultCreateSeat = async (req, res) => {
           libraryId: existingLibrary._id,
           seatLabel,
           seatType: seatData.seatType.trim().toLowerCase() || "general",
-          description: seatData.description.trim() || null,
+          description: seatData.description
+            ? seatData.description.trim()
+            : null,
         });
 
         created.push(seat);
       } catch (error) {
+        console.log(error);
         failed.push({ seatLabel, reason: "Failed to create seat." });
       }
     }
@@ -103,4 +108,4 @@ const bultCreateSeat = async (req, res) => {
   }
 };
 
-module.exports = bultCreateSeat;
+module.exports = bulkCreateSeat;

@@ -1,5 +1,5 @@
 const createSeat = require("./createSeat.controller");
-const bultCreateSeat = require("./bulkCreateSeat.controller");
+const bulkCreateSeat = require("./bulkCreateSeat.controller");
 const getAllSeats = require("./getAllSeats.controller");
 const getOneSeat = require("./getOneSeat.controller");
 const updateSeat = require("./updateSeat.controller");
@@ -9,7 +9,7 @@ const seatGrid = require("./seatGrid.controller");
 
 module.exports = {
   createSeat,
-  bultCreateSeat,
+  bulkCreateSeat,
   getAllSeats,
   getOneSeat,
   updateSeat,
