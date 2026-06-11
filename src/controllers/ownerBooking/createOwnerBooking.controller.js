@@ -79,8 +79,8 @@ const createOwnerBooking = async (req, res) => {
     // ---------------------- 6 Check plan exists and is active ---------------------------------
     const plan = await Plan.findOne({
       libraryId: library._id,
-      timeSlotId: timeSlot._id, // slot the user picked
-      seatType: seat.seatType, // type derived from seat (cabin/vip/general/window)
+      timeSlotId: timeSlot._id,
+      seatType: seat.seatType,
       isActive: true,
     });
 
@@ -92,11 +92,11 @@ const createOwnerBooking = async (req, res) => {
 
     // ---------------------- 7 Calculate dates --------------------------
     const startDate = new Date(req.body.startDate);
-    startDate.setHours(0, 0, 0, 0); // beginning of the day
+    startDate.setHours(0, 0, 0, 0);
 
     const endDate = new Date(startDate);
     endDate.setDate(endDate.getDate() + 30);
-    endDate.setHours(23, 59, 59, 999); // end of that day
+    endDate.setHours(23, 59, 59, 999);
 
     // ------------------------- 8 Check startDate is a working day ---------------------
     const dayName = startDate.toLocaleDateString("en-US", { weekday: "long" });
@@ -156,7 +156,7 @@ const createOwnerBooking = async (req, res) => {
       studentId: student._id,
       amount: booking.price,
       paymentMode: "cash",
-      status: "pending", // not paid yet, owner will collect cash and mark paid
+      status: "pending",
     });
 
     // ------------------------- 13 Auto generate QRCode ----------------------

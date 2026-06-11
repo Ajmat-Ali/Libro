@@ -52,8 +52,8 @@ const addWalkInMember = async (req, res) => {
       userId: student._id,
       phone: student.phone,
       address: req.body.address ? req.body.address.trim() : null,
-      approvalStatus: "approved", // walk-in = auto approved
-      isEmailVerified: true, // owner verified identity in person
+      approvalStatus: "approved",
+      isEmailVerified: true,
       membershipId,
       reviewedBy: req.user.id,
       reviewedAt: new Date(),

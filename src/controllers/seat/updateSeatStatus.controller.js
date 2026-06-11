@@ -12,6 +12,7 @@ const updateSeatStatus = async (req, res) => {
 
     // -------------- 1.1 Validate status -----------------
     const { status, reason } = req.body;
+
     if (!status) {
       return res.status(400).json({ errors: { status: "Status is required" } });
     }
@@ -67,7 +68,7 @@ const updateSeatStatus = async (req, res) => {
 
     // ------------------- 7 Success message ----------------------
     return res.status(200).json({
-      message: `Seat status updated to "${status}" successfully.`,
+      message: `Seat status updated to ${status} successfully.`,
       seat: existingSeat,
     });
   } catch (error) {
