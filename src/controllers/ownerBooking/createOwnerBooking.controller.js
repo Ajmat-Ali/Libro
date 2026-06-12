@@ -29,6 +29,7 @@ const createOwnerBooking = async (req, res) => {
     }
 
     // ------------------ 3 // Step 2: Check student exists, is approved, and is not suspended -------
+
     const student = await User.findById(req.body.studentId);
     if (!student) {
       return res.status(404).json({ message: "Student not found." });

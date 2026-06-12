@@ -102,6 +102,12 @@ const seatGrid = async (req, res) => {
       .select("_id seatLabel seatType status")
       .lean();
 
+    allSeats.sort((a, b) =>
+      a.seatLabel.localeCompare(b.seatLabel, undefined, {
+        numeric: true,
+      }),
+    );
+
     if (allSeats.length === 0) {
       return res.status(200).json({
         success: true,
