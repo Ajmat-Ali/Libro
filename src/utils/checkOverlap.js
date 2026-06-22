@@ -10,7 +10,7 @@ const checkOverlap = async (
   const query = {
     seatId: seatId,
     timeSlotId: timeSlotId,
-    status: "active", // only active bookings block the seat
+    status: "active",
     startDate: { $lt: endDate },
     endDate: { $gt: startDate },
   };

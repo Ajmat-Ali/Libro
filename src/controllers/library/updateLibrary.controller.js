@@ -10,7 +10,6 @@ const timeToMinutes = (timeString) => {
 
 const updateLibrary = async (req, res) => {
   try {
-    // Step 1 → Validate request body
     const { errors, isValid } = validateUpdateLibrary(req.body);
     if (!isValid) {
       return res.status(400).json({ errors });
@@ -18,7 +17,6 @@ const updateLibrary = async (req, res) => {
 
     const user = req.user;
 
-    // Step 2 → Find library
     const library = await Library.findOne({ ownerId: user._id });
     if (!library) {
       return res.status(404).json({
@@ -26,10 +24,8 @@ const updateLibrary = async (req, res) => {
       });
     }
 
-    // Step 3 → Update allowed fields
     const updateData = {};
 
-    // Simple fields
     if (req.body.name !== undefined) updateData.name = req.body.name.trim();
     if (req.body.description !== undefined)
       updateData.description = req.body.description
@@ -38,7 +34,6 @@ const updateLibrary = async (req, res) => {
     if (req.body.isActive !== undefined)
       updateData.isActive = req.body.isActive;
 
-    // Address object - merge with existing
     if (req.body.address) {
       updateData.address = {
         ...library.address.toObject(),

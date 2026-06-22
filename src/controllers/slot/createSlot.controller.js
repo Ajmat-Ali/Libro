@@ -7,13 +7,11 @@ const syncPlans = require("../../utils/syncPlans");
 
 const createSlot = async (req, res) => {
   try {
-    // ------------------------ 1 Validate input -----------------------
     const { errors, isValid } = validateCreateSlot(req.body);
     if (!isValid) {
       return res.status(400).json({ errors });
     }
 
-    // --------------------- 2 Get library ----------------------------
     const existingLibrary = await Library.findOne({ ownerId: req.user._id });
     if (!existingLibrary) {
       return res.status(404).json({
@@ -21,7 +19,6 @@ const createSlot = async (req, res) => {
       });
     }
 
-    // --------------------- 3 convert time to minute duration time must be atleast 30 ----------------------------
     const startTimeMinutes = timeToMinutes(req.body.startTime);
     let endTimeMinutes = timeToMinutes(req.body.endTime);
 
@@ -37,7 +34,6 @@ const createSlot = async (req, res) => {
       });
     }
 
-    // --------------------- 4 Slot must be withing library opening and closing Time ----------------------------
     if (startTimeMinutes < existingLibrary.timings.openingTimeMinutes) {
       return res.status(400).json({
         message: `Slot cannot start before library opening time (${existingLibrary.timings.openingTime}).`,
@@ -49,7 +45,6 @@ const createSlot = async (req, res) => {
       });
     }
 
-    // ----------------------- 5 check duplicate and conflict slotTime ------------------------------------
     const existingSlots = await TimeSlot.find({
       libraryId: existingLibrary._id,
     });

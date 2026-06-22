@@ -26,8 +26,9 @@ const createLibrary = async (req, res) => {
       });
     }
 
-    // -------------- Don't create morethan one library ----------------
+    // -------------- Don't create more than one library ----------------
     const doesLibExist = await Library.find();
+
     if (doesLibExist) {
       return res.status(409).json({ message: "Library already exist" });
     }
@@ -40,7 +41,7 @@ const createLibrary = async (req, res) => {
     // Example: Opens at 06:00 (360), closes at 05:00 next day
     // Then closingTime = 300 + 1440 = 1740 minutes
     if (closingTimeMinutes <= openingTimeMinutes) {
-      closingTimeMinutes += 1440; // Add 24 hours
+      closingTimeMinutes += 1440;
     }
 
     // Step 4 → Create library document
@@ -74,13 +75,13 @@ const createLibrary = async (req, res) => {
         "Thursday",
         "Friday",
         "Saturday",
-      ], // Default if not provided
+      ],
       hourlyRates: req.body.hourlyRates || {
         general: 0,
         vip: 0,
         window: 0,
         cabin: 0,
-      }, // Default rates
+      },
     };
 
     const library = await Library.create(libraryData);

@@ -3,13 +3,11 @@ const Library = require("../../models/library.model");
 
 const getOneFloor = async (req, res) => {
   try {
-    // 1 check library existence
     const existingLibrary = await Library.findOne({ ownerId: req.user._id });
     if (!existingLibrary) {
       return res.status(404).json({ message: "Library not found" });
     }
 
-    // 2 get one floor by params id
     const floor = await Floor.findOne({
       _id: req.params.floorId,
       libraryId: existingLibrary._id,
@@ -18,7 +16,6 @@ const getOneFloor = async (req, res) => {
       return res.status(404).json({ message: "Floor not found" });
     }
 
-    // 3 send success message
     return res
       .status(200)
       .json({ message: "floor fetched successfully", floor });

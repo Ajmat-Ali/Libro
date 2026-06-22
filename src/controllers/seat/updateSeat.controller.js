@@ -8,18 +8,15 @@ const updateSeat = async (req, res) => {
   try {
     const { floorId, seatId } = req.params;
 
-    // ----------- Validate input ------------------
     const { errors, isValid } = validateUpdateSeat(req.body);
     if (!isValid) {
       return res.status(400).json({ errors });
     }
 
-    // -------------- 2 get library -----------------------------
     const existingLibrary = await Library.findOne({ ownerId: req.user._id });
     if (!existingLibrary)
       return res.status(404).json({ message: "Library not found" });
 
-    // ----------------- 3 get Floor --------------
     const existingFloor = await Floor.findOne({
       _id: floorId,
       libraryId: existingLibrary._id,
@@ -27,7 +24,6 @@ const updateSeat = async (req, res) => {
     if (!existingFloor)
       return res.status(404).json({ message: "Floor not found" });
 
-    // -------------- 4 get Seat----------------------------
     const existingSeat = await Seat.findOne({
       _id: seatId,
       floorId,
@@ -35,7 +31,6 @@ const updateSeat = async (req, res) => {
     if (!existingSeat)
       return res.status(404).json({ message: "Seat not found" });
 
-    // -------------- 5 if seatLabel changing check for duplicate and update other fields -----------------
     if (req.body.seatLabel !== undefined) {
       const newLabel = req.body.seatLabel.trim().toUpperCase();
       if (newLabel !== existingSeat.seatLabel) {
@@ -63,10 +58,8 @@ const updateSeat = async (req, res) => {
 
     await existingSeat.save();
 
-    // ---------------- 6 call syncPlans for plan creation -----------------
     await syncPlans(existingLibrary._id);
 
-    // ---------------- 7 call syncPlans for plan creation -----------------
     return res.status(200).json({
       message: "Seat updated successfully.",
       seat: existingSeat,

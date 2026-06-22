@@ -2,21 +2,18 @@ const mongoose = require("mongoose");
 
 const floorSchema = new mongoose.Schema(
   {
-    // ─── Library Reference ────────────────────────────────────────────────────
     libraryId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Library",
       required: [true, "Library reference is required"],
     },
 
-    // ─── Floor Information ────────────────────────────────────────────────────
     name: {
       type: String,
       required: [true, "Floor name is required"],
       trim: true,
       minLength: [2, "Floor name must be at least 2 characters"],
       maxLength: [50, "Floor name cannot exceed 50 characters"],
-      // e.g. "Ground Floor", "First Floor", "Basement"
     },
 
     number: {
@@ -31,7 +28,6 @@ const floorSchema = new mongoose.Schema(
       min: [0, "Total seats cannot be negative"],
     },
 
-    // ─── Description (Optional) ───────────────────────────────────────────────
     description: {
       type: String,
       trim: true,
@@ -40,7 +36,6 @@ const floorSchema = new mongoose.Schema(
       // e.g. "AC floor", "Silent zone", "Group study area"
     },
 
-    // ─── Floor Status ─────────────────────────────────────────────────────────
     isActive: {
       type: Boolean,
       default: true,

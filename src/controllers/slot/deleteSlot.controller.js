@@ -7,13 +7,11 @@ const deleteSlot = async (req, res) => {
   try {
     const { slotId } = req.params;
 
-    // ------------------------- 1 GET library --------------------------------
     const existingLibrary = await Library.findOne({ ownerId: req.user._id });
     if (!existingLibrary) {
       return res.status(404).json({ message: "Library not found." });
     }
 
-    // ------------------------- 2 Get slot --------------------------------
     const existingSlot = await TimeSlot.findOne({
       _id: slotId,
       libraryId: existingLibrary._id,
@@ -22,7 +20,6 @@ const deleteSlot = async (req, res) => {
       return res.status(404).json({ message: "Slot not found." });
     }
 
-    // ------------------------- 3 check whether booking exist on this slot --------------------
     const bookingExists = await Booking.findOne({
       timeSlotId: slotId,
       status: { $in: ["pending", "active"] },
@@ -34,10 +31,8 @@ const deleteSlot = async (req, res) => {
       });
     }
 
-    // ------------------------- 4 delete all plan --------------------
     await Plan.deleteMany({ timeSlotId: slotId });
 
-    // ------------------------- 5 delete slot and return success message --------------------
     await TimeSlot.findByIdAndDelete(existingSlot._id);
 
     return res.status(200).json({

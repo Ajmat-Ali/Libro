@@ -9,26 +9,21 @@ const User = require("../../models/user.model");
 const checkOverlap = require("../../utils/checkOverlap");
 const Booking = require("../../models/booking.model");
 const { v4: uuidv4 } = require("uuid");
-
 const {
   validateCreateOwnerBooking,
 } = require("../../validators/booking.validator");
 
 const createOwnerBooking = async (req, res) => {
   try {
-    //---------------------- 1 Validate request body-----------------------------
     const { errors, isValid } = validateCreateOwnerBooking(req.body);
     if (!isValid) return res.status(400).json({ errors });
 
-    // ---------------------------2 Get Library --------------------
     const library = await Library.findOne({ ownerId: req.user._id });
     if (!library) {
       return res.status(404).json({
         message: "Library not found. Please set up your library first.",
       });
     }
-
-    // ------------------ 3 // Step 2: Check student exists, is approved, and is not suspended -------
 
     const student = await User.findById(req.body.studentId);
     if (!student) {
@@ -50,8 +45,6 @@ const createOwnerBooking = async (req, res) => {
       });
     }
 
-    // --------------- 4  Check seat exists and is bookable-------------------------------
-
     const seat = await Seat.findOne({
       _id: req.body.seatId,
       libraryId: library._id,
@@ -65,7 +58,7 @@ const createOwnerBooking = async (req, res) => {
         message: `Seat "${seat.seatLabel}" is currently "${seat.status}". Only active seats can be booked.`,
       });
     }
-    // ------------------------ 5 Check time slot exists and is active-------------------
+
     const timeSlot = await TimeSlot.findOne({
       _id: req.body.timeSlotId,
       libraryId: library._id,
@@ -77,7 +70,6 @@ const createOwnerBooking = async (req, res) => {
       return res.status(400).json({ message: "This time slot is disabled." });
     }
 
-    // ---------------------- 6 Check plan exists and is active ---------------------------------
     const plan = await Plan.findOne({
       libraryId: library._id,
       timeSlotId: timeSlot._id,
@@ -91,7 +83,6 @@ const createOwnerBooking = async (req, res) => {
       });
     }
 
-    // ---------------------- 7 Calculate dates --------------------------
     const startDate = new Date(req.body.startDate);
     startDate.setHours(0, 0, 0, 0);
 
@@ -99,7 +90,6 @@ const createOwnerBooking = async (req, res) => {
     endDate.setDate(endDate.getDate() + 30);
     endDate.setHours(23, 59, 59, 999);
 
-    // ------------------------- 8 Check startDate is a working day ---------------------
     const dayName = startDate.toLocaleDateString("en-US", { weekday: "long" });
 
     if (!library.workingDays.includes(dayName)) {
@@ -108,7 +98,6 @@ const createOwnerBooking = async (req, res) => {
       });
     }
 
-    // -------------------------- 9 Check startDate is not a holiday -----------------------
     const isHoliday = library.holidays.some((holiday) => {
       const holidayDate = new Date(holiday.date);
       return holidayDate.toDateString() === startDate.toDateString();
@@ -120,7 +109,6 @@ const createOwnerBooking = async (req, res) => {
       });
     }
 
-    // ----------------------- 10 OVERLAP DETECTION ----------------------
     const overlapping = await checkOverlap(
       seat._id,
       timeSlot._id,
@@ -134,7 +122,6 @@ const createOwnerBooking = async (req, res) => {
       });
     }
 
-    // --------------------- 11 Create the booking ----------------------------
     const booking = await Booking.create({
       libraryId: library._id,
       studentId: student._id,
@@ -150,7 +137,6 @@ const createOwnerBooking = async (req, res) => {
       approvedAt: new Date(),
     });
 
-    // ------------------- 12 Auto create payment document ------------------------
     const payment = await Payment.create({
       libraryId: library._id,
       bookingId: booking._id,
@@ -160,7 +146,6 @@ const createOwnerBooking = async (req, res) => {
       status: "pending",
     });
 
-    // ------------------------- 13 Auto generate QRCode ----------------------
     const qrCode = await QRCode.create({
       bookingId: booking._id,
       studentId: student._id,
@@ -169,7 +154,6 @@ const createOwnerBooking = async (req, res) => {
       expiresAt: endDate,
     });
 
-    // ----------------------- Success message ---------------------------
     return res.status(201).json({
       message: "Booking created successfully.",
       booking,

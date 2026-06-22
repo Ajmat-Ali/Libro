@@ -7,10 +7,8 @@ const { VALID_STATUSES } = require("../../constants/index");
 
 const updateSeatStatus = async (req, res) => {
   try {
-    // ------------- 1 get floorId, seatId ----------------
     const { floorId, seatId } = req.params;
 
-    // -------------- 1.1 Validate status -----------------
     const { status, reason } = req.body;
 
     if (!status) {
@@ -24,12 +22,10 @@ const updateSeatStatus = async (req, res) => {
       });
     }
 
-    // ------------- 2 Get Library ----------------------
     const existingLibrary = await Library.findOne({ ownerId: req.user._id });
     if (!existingLibrary)
       return res.status(404).json({ message: "Library not found" });
 
-    // ------------- 3 Get floor -----------------------
     const existingFloor = await Floor.findOne({
       _id: floorId,
       libraryId: existingLibrary._id,
@@ -37,7 +33,6 @@ const updateSeatStatus = async (req, res) => {
     if (!existingFloor)
       return res.status(404).json({ message: "Floor not found" });
 
-    // ------------- 4  get seat ------------------------------
     const existingSeat = await Seat.findOne({
       _id: seatId,
       floorId,
@@ -45,7 +40,6 @@ const updateSeatStatus = async (req, res) => {
     if (!existingSeat)
       return res.status(404).json({ message: "Seat not found" });
 
-    // ------------- 5 Can't be "maintenance",  "disabled" if it has alreadt active bookin ------------
     if (status === "maintenance" || status === "disabled") {
       const activeBooking = await Booking.findOne({
         seatId: existingSeat._id,
@@ -58,7 +52,6 @@ const updateSeatStatus = async (req, res) => {
       }
     }
 
-    // ------------------- 6 Update Seat status ----------------------
     existingSeat.status = status;
     existingSeat.statusUpdatedBy = req.user.id;
     existingSeat.statusUpdatedAt = new Date();
@@ -66,7 +59,6 @@ const updateSeatStatus = async (req, res) => {
 
     await existingSeat.save();
 
-    // ------------------- 7 Success message ----------------------
     return res.status(200).json({
       message: `Seat status updated to ${status} successfully.`,
       seat: existingSeat,

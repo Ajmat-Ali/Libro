@@ -3,18 +3,15 @@ const TimeSlot = require("../../models/timeSlot.model");
 
 const getAllSlot = async (req, res) => {
   try {
-    // ------------------- 1 get Library ----------------------------
     const existingLibrary = await Library.findOne({ ownerId: req.user._id });
     if (!existingLibrary) {
       return res.status(404).json({ message: "Library not found." });
     }
 
-    // ------------------- 2 get All slots ----------------------------
     const slots = await TimeSlot.find({ libraryId: existingLibrary._id }).sort({
       startTimeMinutes: 1,
     });
 
-    // ------------------- 3 return success message ----------------------------
     return res.status(200).json({
       message: "Slots fetched successfully.",
       count: slots.length,

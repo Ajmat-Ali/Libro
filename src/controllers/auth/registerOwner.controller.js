@@ -5,13 +5,13 @@ const bcrypt = require("bcrypt");
 
 const registerOwner = async (req, res) => {
   try {
-    // Step 1 → Validate incoming data
+    // Step 1 -> Validate incoming data
     const { errors, isValid } = validateRegisterOwner(req.body);
     if (!isValid) {
       return res.status(400).json({ errors });
     }
 
-    // Step 2 → Check if owner already exists
+    // Step 2 -> Check if owner already exists
     const existingOwner = await User.findOne({ role: ROLES.OWNER });
     if (existingOwner) {
       return res.status(403).json({
@@ -20,7 +20,7 @@ const registerOwner = async (req, res) => {
       });
     }
 
-    // Step 3 → Check if email already taken
+    // Step 3 -> Check if email already taken
     const existingEmail = await User.findOne({
       email: req.body.email.toLowerCase().trim(),
     });
@@ -31,7 +31,7 @@ const registerOwner = async (req, res) => {
       });
     }
 
-    // Step 4 → Hash the password
+    // Step 4 -> Hash the password
     const hashedPassword = await bcrypt.hash(req.body.password, SALT_ROUND);
 
     const owner = await User.create({
@@ -39,7 +39,7 @@ const registerOwner = async (req, res) => {
       lastName: req.body.lastName ? req.body.lastName.toLowerCase().trim() : "",
       email: req.body.email.toLowerCase().trim(),
       password: hashedPassword,
-      role: ROLES.OWNER, // hardcoded — never from user input
+      role: ROLES.OWNER,
     });
 
     return res.status(201).json({

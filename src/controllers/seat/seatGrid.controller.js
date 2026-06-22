@@ -10,9 +10,6 @@ const seatGrid = async (req, res) => {
     const { floorId } = req.params;
     const { slot, date } = req.query;
 
-    // console.log(floorId, slot, date);
-
-    // ------------------ Step 1 Validate Inputs -------------------
     if (!floorId || !slot) {
       return res.status(400).json({
         success: false,
@@ -20,7 +17,6 @@ const seatGrid = async (req, res) => {
       });
     }
 
-    // validate object id
     if (
       !mongoose.Types.ObjectId.isValid(floorId) ||
       !mongoose.Types.ObjectId.isValid(slot)
@@ -31,7 +27,6 @@ const seatGrid = async (req, res) => {
       });
     }
 
-    // validate date
     let queryDate = new Date();
     if (date) {
       queryDate = new Date(date);
@@ -43,7 +38,6 @@ const seatGrid = async (req, res) => {
       }
     }
 
-    //  Block Past Date
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     if (queryDate < today) {
@@ -53,7 +47,6 @@ const seatGrid = async (req, res) => {
       });
     }
 
-    // Verify librray ownership
     const library = await Library.findOne({
       ownerId: req.user._id,
     });
@@ -79,7 +72,6 @@ const seatGrid = async (req, res) => {
       });
     }
 
-    // Verify time slot exists
     const timeSlot = await TimeSlot.findById(slot).lean();
     if (!timeSlot) {
       return res.status(404).json({
@@ -88,14 +80,12 @@ const seatGrid = async (req, res) => {
       });
     }
 
-    // --------------- STEP 2: Create Date Range ------------------------
     const startOfDay = new Date(queryDate);
     startOfDay.setHours(0, 0, 0, 0);
 
     const endOfDay = new Date(queryDate);
     endOfDay.setHours(23, 59, 59, 999);
 
-    // --------------------- STEP 3: GET ALL SEATS ----------------------
     const allSeats = await Seat.find({
       floorId,
     })

@@ -4,13 +4,12 @@ const Plan = require("../../models/plan.model");
 const togglePlanStatus = async (req, res) => {
   try {
     const { planId } = req.params;
-    // ------------------- Get Library ------------------------------------
+
     const existingLibrary = await Library.findOne({ ownerId: req.user._id });
     if (!existingLibrary) {
       return res.status(404).json({ message: "Library not found." });
     }
 
-    // ------------------------ Get One Plan by planId -------------------
     const existingPlan = await Plan.findOne({
       _id: planId,
       libraryId: existingLibrary._id,
@@ -19,13 +18,11 @@ const togglePlanStatus = async (req, res) => {
       return res.status(404).json({ message: "Plan not found." });
     }
 
-    // ------------------------ Update Plan status -------------------
     existingPlan.isActive = !existingPlan.isActive;
     existingPlan.statusUpdatedBy = req.user.id;
     existingPlan.statusUpdatedAt = new Date();
     await existingPlan.save();
 
-    // ------------------------ Success message -------------------
     return res.status(200).json({
       message: `Plan ${existingPlan.isActive ? "activated" : "deactivated"} successfully.`,
       isActive: existingPlan.isActive,

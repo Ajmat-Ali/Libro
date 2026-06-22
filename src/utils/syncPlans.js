@@ -7,7 +7,6 @@ const Plan = require("../models/plan.model");
 
 const syncPlans = async (libraryId) => {
   try {
-    // ------------------- 1 check library existence ----------------------
     const existingLibrary = await Library.findById(libraryId);
     if (!existingLibrary) return;
 

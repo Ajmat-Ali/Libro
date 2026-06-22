@@ -6,8 +6,6 @@ const toggleMemberStatus = async (req, res) => {
   try {
     const { memberId } = req.params;
 
-    // ------------- 1 Get user (Only student) ----------------
-
     const user = await User.findOne({
       _id: memberId,
       role: ROLES.STUDENT,
@@ -16,15 +14,12 @@ const toggleMemberStatus = async (req, res) => {
       return res.status(404).json({ message: "Member not found." });
     }
 
-    // ---------- 2 Cannot suspend the owner -----------------
     if (user.role === ROLES.OWNER) {
       return res.status(403).json({ message: "Cannot suspend the owner." });
     }
 
-    // ---------------- 3 Toggle status ------------------------------
     user.isActive = !user.isActive;
 
-    // ----------------- 4 cancel all OR code ----------------------------
     if (!user.isActive) {
       // SUSPEND: clear all sessions instantly
       user.refreshTokens = [];

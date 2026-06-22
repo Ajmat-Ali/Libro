@@ -6,7 +6,6 @@ const getOneMember = async (req, res) => {
   try {
     const { memberId } = req.params; // userId only is memberId
 
-    // -------------- 1 Get studentProfile ----------------
     const profile = await StudentProfile.findOne({ _id: memberId })
       .populate("userId", "-password -refreshTokens -passwordResetOtp")
       .select("-emailOtp");
@@ -14,7 +13,6 @@ const getOneMember = async (req, res) => {
       return res.status(404).json({ message: "Member not found." });
     }
 
-    // --------------------- 2 Summary Data -------------------------------
     const [activeBookingsCount, pendingPaymentsCount, totalPaidResult] =
       await Promise.all([
         await Booking.countDocuments({

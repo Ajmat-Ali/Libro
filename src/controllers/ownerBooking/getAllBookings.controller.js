@@ -4,13 +4,11 @@ const User = require("../../models/user.model");
 
 const getAllBookings = async (req, res) => {
   try {
-    // ------------------ 1 Get Library --------------------
     const library = await Library.findOne({ ownerId: req.user._id });
     if (!library) {
       return res.status(404).json({ message: "Library not found." });
     }
 
-    // --------------------- 2 Get all variable from Quesry params ----------------
     const {
       search,
       status,
@@ -25,7 +23,6 @@ const getAllBookings = async (req, res) => {
     const limitNum = Math.min(50, Math.max(1, parseInt(limit)));
     const skip = (pageNum - 1) * limitNum;
 
-    // ------------------ 3 Build filter step by step ------------------
     const filter = { libraryId: library._id };
 
     if (status) filter.status = status;
@@ -38,6 +35,7 @@ const getAllBookings = async (req, res) => {
       }).select("_id");
 
       const seatIds = seatsOnFloor.map((s) => s._id);
+
       filter.seatId = { $in: seatIds };
     }
 
@@ -59,7 +57,6 @@ const getAllBookings = async (req, res) => {
       filter.studentId = { $in: studentIds };
     }
 
-    // ------------------------------- 4 Get booking data ----------------------------
     let bookings = await Booking.find(filter)
       .populate("studentId", "firstName lastName email phone")
       .populate("seatId", "seatLabel seatType")
@@ -69,11 +66,6 @@ const getAllBookings = async (req, res) => {
       .skip(skip)
       .limit(limitNum);
 
-    // console.log(bookings);
-
-    // -------------------- Search By Name and email -----------------
-
-    // ------------------------------- 5 Success message ---------------------
     return res.status(200).json({
       message: "Bookings fetched successfully.",
       total,
@@ -82,7 +74,6 @@ const getAllBookings = async (req, res) => {
       totalPages: Math.ceil(total / limitNum),
       bookings,
     });
-    // ------------------------------- 3
   } catch (error) {
     console.error("getAllBookings error:", error.message);
     return res

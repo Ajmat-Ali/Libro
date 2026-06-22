@@ -12,13 +12,11 @@ const extendBooking = async (req, res) => {
   try {
     const { bookingId } = req.params;
 
-    // ----------------- 1 Get Library ------------------------
     const library = await Library.findOne({ ownerId: req.user._id });
     if (!library) {
       return res.status(404).json({ message: "Library not found." });
     }
 
-    // ---------------- 2 Get booking -------------------------------------------
     const existingBooking = await Booking.findOne({
       _id: bookingId,
       libraryId: library._id,
@@ -34,7 +32,6 @@ const extendBooking = async (req, res) => {
       });
     }
 
-    // ---------------- 3 VErify seat, slot, plan ------------------------------------------------
     const [seat, timeSlot, plan] = await Promise.all([
       Seat.findById(existingBooking.seatId),
       TimeSlot.findById(existingBooking.timeSlotId),
@@ -55,7 +52,6 @@ const extendBooking = async (req, res) => {
       return res.status(400).json({ message: "Plan is no longer active." });
     }
 
-    // ---------------- 4 New period starts day AFTER current booking ends--------------------------------------------
     const newStartDate = new Date(existingBooking.endDate);
     newStartDate.setDate(newStartDate.getDate() + 1);
     newStartDate.setHours(0, 0, 0, 0);
@@ -64,7 +60,6 @@ const extendBooking = async (req, res) => {
     newEndDate.setDate(newEndDate.getDate() + 30);
     newEndDate.setHours(23, 59, 59, 999);
 
-    // ---------------- 5 Check overlap ---------------------
     const overlapping = await checkOverlap(
       seat._id,
       timeSlot._id,
@@ -79,7 +74,6 @@ const extendBooking = async (req, res) => {
       });
     }
 
-    // ---------------- 6 create new booking ---------------------
     const newBooking = await Booking.create({
       libraryId: library._id,
       studentId: existingBooking.studentId,
@@ -88,7 +82,7 @@ const extendBooking = async (req, res) => {
       planId: existingBooking.planId,
       bookedBy: req.user.id,
       status: "active",
-      price: plan.calculatedPrice, // fresh snapshot for new period
+      price: plan.calculatedPrice,
       startDate: newStartDate,
       endDate: newEndDate,
       approvedBy: req.user.id,
@@ -96,7 +90,6 @@ const extendBooking = async (req, res) => {
       extendedFrom: existingBooking._id, // history chain
     });
 
-    // ---------------- 7  Create new payment ---------------------
     const payment = await Payment.create({
       libraryId: library._id,
       bookingId: newBooking._id,
@@ -106,7 +99,6 @@ const extendBooking = async (req, res) => {
       status: "pending",
     });
 
-    // ---------------- 8 Create new QRCode -----------------
     const qrCode = await QRCode.create({
       bookingId: newBooking._id,
       studentId: existingBooking.studentId,
@@ -115,7 +107,6 @@ const extendBooking = async (req, res) => {
       expiresAt: newEndDate,
     });
 
-    // --------------------- 9 Success message ---------------------
     return res.status(201).json({
       message: "Booking extended successfully.",
       newBooking,

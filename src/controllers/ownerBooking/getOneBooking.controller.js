@@ -6,13 +6,11 @@ const getOneBooking = async (req, res) => {
   try {
     const { bookingId } = req.params;
 
-    // -------------------- 1 Get Library ------------------------
     const library = await Library.findOne({ ownerId: req.user._id });
     if (!library) {
       return res.status(404).json({ message: "Library not found." });
     }
 
-    // ---------------------- 2 Get Booking details ------------------------
     const booking = await Booking.findOne({
       _id: req.params.bookingId,
       libraryId: library._id,
@@ -26,10 +24,8 @@ const getOneBooking = async (req, res) => {
       return res.status(404).json({ message: "Booking not found." });
     }
 
-    // ------------------------ 3 Fetch payment info -------------------
     const payment = await Payment.findOne({ bookingId: booking._id });
 
-    // ----------------------- 4 Success message ---------------------
     return res.status(200).json({ booking, payment });
   } catch (error) {
     console.error("getOneBooking error:", error.message);

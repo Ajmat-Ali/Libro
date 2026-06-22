@@ -6,13 +6,11 @@ const cancelBooking = async (req, res) => {
   try {
     const { bookingId } = req.params;
 
-    // ------------------- 1 Get Library ---------------
     const library = await Library.findOne({ ownerId: req.user._id });
     if (!library) {
       return res.status(404).json({ message: "Library not found." });
     }
 
-    // ----------------- 2 Get booking ---------------------
     const booking = await Booking.findOne({
       _id: bookingId,
       libraryId: library._id,
@@ -27,7 +25,7 @@ const cancelBooking = async (req, res) => {
         message: `Only active bookings can be cancelled. This booking is "${booking.status}".`,
       });
     }
-    // ----------------- 3  Update booking ---------------------
+
     booking.status = "cancelled";
     booking.cancelledBy = req.user.id;
     booking.cancelledAt = new Date();
@@ -37,7 +35,6 @@ const cancelBooking = async (req, res) => {
 
     await booking.save();
 
-    // ----------------- 4 Revoke QR code immediately ---------------------
     await QRCode.findOneAndUpdate(
       { bookingId: booking._id },
       {
@@ -48,7 +45,6 @@ const cancelBooking = async (req, res) => {
       },
     );
 
-    // ----------------- 5 Success message ---------------------
     return res.status(200).json({
       message: "Booking cancelled and QR code revoked successfully.",
     });

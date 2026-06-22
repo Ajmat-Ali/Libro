@@ -6,13 +6,11 @@ const recordCashPayment = async (req, res) => {
   try {
     const { paymentId } = req.params;
 
-    // ------------------- Get Library ---------------------
     const library = await Library.findOne({ ownerId: req.user._id });
     if (!library) {
       return res.status(404).json({ message: "Library not found." });
     }
 
-    // ----------------- Get Payment ------------------------
     const payment = await Payment.findOne({
       _id: paymentId,
       libraryId: library._id,
@@ -28,14 +26,12 @@ const recordCashPayment = async (req, res) => {
         .json({ message: "Payment is already marked as paid." });
     }
 
-    // ----------------------- If payment is not cash then return ----------------
     if (payment.paymentMode !== "cash") {
       return res.status(400).json({
         message: "This is an online payment. Cannot mark as cash.",
       });
     }
 
-    //------------------------ Don't collect payment for a cancelled booking -------------------
     const booking = await Booking.findById(payment.bookingId);
 
     if (!booking) {
@@ -48,7 +44,6 @@ const recordCashPayment = async (req, res) => {
       });
     }
 
-    // ------------------ Apply discount if owner wants to give concession --------------------
     if (req.body.discount && parseFloat(req.body.discount) > 0) {
       const discount = parseFloat(req.body.discount);
       if (discount >= payment.amount) {
@@ -56,13 +51,12 @@ const recordCashPayment = async (req, res) => {
           message: "Discount cannot be equal to or more than the total amount.",
         });
       }
-      // Reduce amount by discount
+
       payment.amount = payment.amount - discount;
     }
 
-    // --------------- update payment details ----------------
     payment.status = "paid";
-    payment.recordedBy = req.user._id; // which owner recorded this
+    payment.recordedBy = req.user._id;
     payment.recordedAt = new Date();
     payment.paidAt = new Date();
 
@@ -72,7 +66,6 @@ const recordCashPayment = async (req, res) => {
 
     await payment.save();
 
-    //
     return res.status(200).json({
       message: "Cash payment recorded successfully.",
       payment,

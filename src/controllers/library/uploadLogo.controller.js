@@ -40,14 +40,14 @@ const uploadLogo = async (req, res) => {
     // Step 4 → Upload new logo to Cloudinary
     const result = await uploadToCloudinary(req.file.buffer, "library-logos");
 
-    // Step 5 → Update library with new logo URL
+    // Step 5  Update library with new logo URL
     const updatedLibrary = await Library.findByIdAndUpdate(
       library._id,
       { logo: result.secure_url },
       { returnDocument: "after" },
     );
 
-    // Step 6 → Return success response
+    // Step 6  Return success response
     return res.status(200).json({
       message: "Logo uploaded successfully",
       logo: updatedLibrary.logo,

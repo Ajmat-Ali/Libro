@@ -6,13 +6,11 @@ const generateReceipt = require("../../utils/generateReceipt");
 
 const downloadReceipt = async (req, res) => {
   try {
-    // ---------------- Get Library ---------------
     const library = await Library.findOne({ ownerId: req.user._id });
     if (!library) {
       return res.status(404).json({ message: "Library not found." });
     }
 
-    // ------------------------ Get payment ------------------
     const payment = await Payment.findOne({
       _id: req.params.paymentId,
       libraryId: library._id,
@@ -33,7 +31,6 @@ const downloadReceipt = async (req, res) => {
       });
     }
 
-    // ------------------------ Get user and profile info -----------------
     const [user, profile] = await Promise.all([
       User.findById(payment.studentId).select("firstName lastName email phone"),
       StudentProfile.findOne({ userId: payment.studentId }).select(
@@ -41,7 +38,6 @@ const downloadReceipt = async (req, res) => {
       ),
     ]);
 
-    // ------------------------ Create receipt data obj ---------------------
     const receiptData = {
       receiptNumber: payment._id.toString().slice(-8).toUpperCase(),
       libraryName: library.name,
@@ -66,7 +62,6 @@ const downloadReceipt = async (req, res) => {
       razorpayPaymentId: payment.razorpayPaymentId || null,
     };
 
-    // ---------------  Generate receipt and send --------------------
     await generateReceipt(res, receiptData);
   } catch (error) {
     console.error("downloadReceipt error:", error.message);

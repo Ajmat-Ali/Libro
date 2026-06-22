@@ -33,7 +33,6 @@ const timeSlotSchema = new mongoose.Schema(
       type: Number,
       required: [true, "Duration is required"],
       min: [30, "Slot duration must be at least 30 minutes"],
-      // Minimum 30 minutes → practical minimum for any library slot
     },
 
     startTimeDisplay: {

@@ -7,31 +7,25 @@ const syncPlans = require("../../utils/syncPlans");
 
 const bulkCreateSeat = async (req, res) => {
   try {
-    // ------------------------ Get floorId from req.params -----
     const { floorId } = req.params;
 
     // console.log(req.body);
 
-    // ------------------ 1 Validate bulk seat to check is it array or not -------------------
     if (!Array.isArray(req.body.seats) || req.body.seats.length === 0) {
       return res
         .status(400)
         .json({ message: "seats must be a non-empty array." });
     }
 
-    // ------------------- 1.1 -----------------
     if (req.body.seats.length > 100) {
       return res
         .status(400)
         .json({ message: "Cannot add more than 100 seats at once." });
     }
 
-    // ----------------------- 2 check existing Library and floor ----------------------------
     const existingLibrary = await Library.findOne({ ownerId: req.user._id });
     if (!existingLibrary)
       return res.status(404).json({ message: "Library not found" });
-
-    // ----------------------- 3 check existing Library and floor ----------------------------
 
     const existingFloor = await Floor.findOne({
       _id: floorId,
@@ -45,7 +39,6 @@ const bulkCreateSeat = async (req, res) => {
     const failed = [];
 
     for (const seatData of req.body.seats) {
-      // --------------------- 4 validate each seat ---------------------------------------------
       const { errors, isValid } = validateCreateSeat(seatData);
       if (!isValid) {
         failed.push({

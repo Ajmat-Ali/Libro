@@ -4,19 +4,19 @@ const Payment = require("../../models/payment.model");
 const getOnePayment = async (req, res) => {
   try {
     const { paymentId } = req.params;
-    // --------------------------------- Get library -------------------------
+
     const library = await Library.findOne({ ownerId: req.user.id });
     if (!library) {
       return res.status(404).json({ message: "Library not found." });
     }
 
-    // ------------------ Get Payment --------------------
     const payment = await Payment.findOne({
       _id: paymentId,
       libraryId: library._id,
     })
       .populate("studentId", "firstName lastName email phone")
       .populate("bookingId");
+
     if (!payment) {
       return res.status(404).json({ message: "Payment not found." });
     }

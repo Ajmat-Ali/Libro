@@ -5,7 +5,6 @@ const StudentProfile = require("../../models/studentProfile.model");
 
 const getAllMembers = async (req, res) => {
   try {
-    // ---------------1  Extract all filter variable ------------------
     const {
       search,
       approvalStatus,
@@ -19,7 +18,6 @@ const getAllMembers = async (req, res) => {
     const limitNum = Math.min(50, Math.max(1, parseInt(limit)));
     const skip = (pageNum - 1) * limitNum;
 
-    // -------------- 2  Build profile filter -------------------------
     const profileFilter = {};
 
     if (approvalStatus) {
@@ -32,7 +30,6 @@ const getAllMembers = async (req, res) => {
       profileFilter.approvalStatus = approvalStatus;
     }
 
-    // --------------3 Phone search directly on StudentProfile -------------------------
     if (search && /^\d+$/.test(search.trim())) {
       profileFilter.phone = { $regex: search.trim(), $options: "i" };
     }
@@ -41,15 +38,12 @@ const getAllMembers = async (req, res) => {
 
     if (userId) profileFilter.userId = userId;
 
-    // --------------4 Get all profile with user data populated -------------------------
     let profiles = await StudentProfile.find(profileFilter)
       .populate("userId", "-password -refreshTokens -passwordResetOtp")
       .select("-emailOtp");
 
-    // --------------5 Remove any orphan profiles (safety — shouldn't happen) -------------------------
     profiles = profiles.filter((p) => p.userId !== null);
 
-    // --------------6 Apply name/email search (in-memory — fine for small library dataset)-------------------------
     if (search && !/^\d+$/.test(search.trim())) {
       const searchLower = search.trim().toLowerCase();
 
@@ -63,7 +57,6 @@ const getAllMembers = async (req, res) => {
       });
     }
 
-    // ------------------------ 7 Apply isActive filter ---------------------------
     if (isActive) {
       const flag = isActive === "true";
       profiles = profiles.filter((p) => p.userId && p.userId.isActive === flag);

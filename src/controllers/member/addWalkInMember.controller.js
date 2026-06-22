@@ -11,11 +11,9 @@ const { sendEmail } = require("../../utils/sendEmail");
 
 const addWalkInMember = async (req, res) => {
   try {
-    // ---------------- 1 Validate input --------------------------------
     const { errors, isValid } = validateAddWalkInMember(req.body);
     if (!isValid) return res.status(400).json({ errors });
 
-    // ----------------------- 2 check duplicate member ---------------------------
     // Check duplicates
     const existingEmail = await User.findOne({
       email: req.body.email.toLowerCase().trim(),
@@ -30,11 +28,10 @@ const addWalkInMember = async (req, res) => {
     if (existingPhone) {
       return res.status(409).json({ message: "Phone number already in use." });
     }
-    // ----------------------- 3 Generate Random Password ---------------------------
+
     const rawPassword = generateRandomPassword();
     const hashedPassword = await bcrypt.hash(rawPassword, SALT_ROUND);
 
-    // ----------------------- 4 Create user (student) ---------------------------
     const student = await User.create({
       firstName: req.body.firstName.trim().toLowerCase(),
       lastName: req.body.lastName ? req.body.lastName.trim().toLowerCase() : "",
@@ -45,7 +42,6 @@ const addWalkInMember = async (req, res) => {
       isActive: true,
     });
 
-    // ----------------------- 5 create user profile (studentProfile) ---------------------------
     const membershipId = generateMembershipId();
 
     const profile = await StudentProfile.create({
@@ -59,7 +55,6 @@ const addWalkInMember = async (req, res) => {
       reviewedAt: new Date(),
     });
 
-    // ------------------------- 6 Email student their auto-generated password ---------------------------
     try {
       await sendEmail(
         student.email,
@@ -74,7 +69,6 @@ const addWalkInMember = async (req, res) => {
         `,
       );
     } catch (error) {
-      // Here owner can share password manually. it should not block to create account
       console.error("Walk-in email failed:", emailErr.message);
     }
     return res.status(201).json({
@@ -87,8 +81,7 @@ const addWalkInMember = async (req, res) => {
         phone: profile.phone,
         membershipId: profile.membershipId,
       },
-      // Return raw password in response so owner can share manually
-      // if email fails
+
       temporaryPassword: rawPassword,
     });
   } catch (error) {

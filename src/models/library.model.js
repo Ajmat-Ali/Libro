@@ -30,7 +30,6 @@ const librarySchema = new mongoose.Schema(
       default: null,
       validate: {
         validator: function (value) {
-          // Only validate if logo exists (optional field)
           if (!value) return true;
           return validator.isURL(value) && value.includes("res.cloudinary.com");
         },

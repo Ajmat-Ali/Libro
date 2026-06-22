@@ -9,16 +9,15 @@ const syncPlans = require("../../utils/syncPlans");
 const updateSlot = async (req, res) => {
   try {
     const { slotId } = req.params;
-    // -------------------1 Validate input ----------------
+
     const { isValid, errors } = validateUpdateSlot(req.body);
     if (!isValid) return res.status(400).json({ errors });
 
-    // -------------------2 Get Librray----------------
     const existingLibrary = await Library.findOne({ ownerId: req.user._id });
     if (!existingLibrary) {
       return res.status(404).json({ message: "Library not found." });
     }
-    // -------------------3 Get Slot ----------------
+
     const existingSlot = await TimeSlot.findOne({
       _id: slotId,
       libraryId: existingLibrary._id,
@@ -26,7 +25,6 @@ const updateSlot = async (req, res) => {
     if (!existingSlot)
       return res.status(404).json({ message: "Slot not found." });
 
-    // -------------------4 check slot has ["active", "pending"] booking -------------------------------
     const timesChanging =
       req.body.startTime !== undefined || req.body.endTime !== undefined;
 

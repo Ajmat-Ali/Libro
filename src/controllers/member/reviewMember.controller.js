@@ -6,15 +6,12 @@ const reviewMember = async (req, res) => {
     const { memberId } = req.params;
     const { action, rejectionReason } = req.body;
 
-    //-------------------- 1 validate action -----------------
-
     if (!action || !["approve", "reject"].includes(action)) {
       return res.status(400).json({
         message: "action must be either 'approve' or 'reject'",
       });
     }
 
-    // ------------------- 2 validate rejection Reason ------------------
     if (
       action === "reject" &&
       (!rejectionReason || rejectionReason.trim() === "")
@@ -24,7 +21,6 @@ const reviewMember = async (req, res) => {
       });
     }
 
-    //----------------------- 3 Get member ------------------
     const profile = await StudentProfile.findOne({
       _id: memberId,
     });
@@ -32,14 +28,12 @@ const reviewMember = async (req, res) => {
       return res.status(404).json({ message: "Member not found." });
     }
 
-    // ----------------------- 4 check profile status ------------------------------
     if (profile.approvalStatus !== "pending") {
       return res.status(400).json({
         message: `Member is already ${profile.approvalStatus}. Cannot review again.`,
       });
     }
 
-    // --------------------- 5  action = approve -------------------------------
     if (action === "approve") {
       profile.approvalStatus = "approved";
       profile.membershipId = generateMembershipId();
@@ -55,7 +49,6 @@ const reviewMember = async (req, res) => {
       });
     }
 
-    // --------------------- 6  action = reject -------------------------------
     profile.approvalStatus = "rejected";
     profile.reviewedBy = req.user.id;
     profile.reviewedAt = new Date();
