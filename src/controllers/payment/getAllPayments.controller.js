@@ -20,6 +20,27 @@ const getAllPayments = async (req, res) => {
 
     const total = await Payment.countDocuments(filter);
 
+    const totalSummary = await Payment.aggregate([
+      {
+        $group: {
+          _id: "$status",
+          totalAmount: { $sum: "$amount" },
+          totalCount: { $sum: 1 },
+        },
+      },
+      // { $project: { _id: 0, status: "$_id", totalAmount: 1, totalCount: 1 } },
+    ]);
+
+    const formatted = {
+      paid: { totalAmount: 0, totalCount: 0 },
+      pending: { totalAmount: 0, totalCount: 0 },
+    };
+
+    totalSummary.forEach((item) => {
+      formatted[item["_id"]].totalAmount = item.totalAmount;
+      formatted[item["_id"]].totalCount = item.totalCount;
+    });
+
     const payments = await Payment.find(filter)
       .populate("studentId", "firstName lastName email")
       .populate("bookingId", "startDate endDate status")
@@ -33,6 +54,7 @@ const getAllPayments = async (req, res) => {
       page: pageNum,
       totalPages: Math.ceil(total / limitNum),
       payments,
+      formatted,
     });
   } catch (error) {
     console.error("getAllPayments error:", error.message);
