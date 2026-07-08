@@ -1,4 +1,5 @@
 const express = require("express");
+const { authLimiter } = require("../middlewares/rateLimiter");
 
 const router = express.Router();
 const {
@@ -16,16 +17,16 @@ const {
 } = require("../controllers/auth/index");
 const auth = require("../middlewares/auth.middleware");
 
-router.post("/register-owner", registerOwner);
-router.post("/register-student", registerStudent);
-router.post("/verify-email", verifyEmail);
-router.post("/resend-otp", resendOtp);
-router.post("/login", login);
-router.post("/refresh-token", refreshToken);
+router.post("/register-owner", authLimiter, registerOwner);
+router.post("/register-student", authLimiter, registerStudent);
+router.post("/verify-email", authLimiter, verifyEmail);
+router.post("/resend-otp", authLimiter, resendOtp);
+router.post("/login", authLimiter, login);
+router.post("/refresh-token", authLimiter, refreshToken);
 router.post("/logout", logout);
 router.post("/logout-all", logoutAll);
-router.post("/change-password", auth, changePassword);
-router.post("/forgot-password", forgotPassword);
-router.post("/reset-password", resetPassword);
+router.post("/change-password", authLimiter, auth, changePassword);
+router.post("/forgot-password", authLimiter, forgotPassword);
+router.post("/reset-password", authLimiter, resetPassword);
 
 module.exports = router;

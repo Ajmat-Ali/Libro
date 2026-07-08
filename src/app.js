@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+
 const authRoutes = require("./routes/auth.routes");
 const ownerRoutes = require("./routes/owner.routes");
 const floorSeatRoutes = require("./routes/floorSeat.routes"); // floor and seat routes in same file
@@ -16,9 +17,14 @@ const attendanceRoutes = require("./routes/attendance.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
 const studentProfileRoutes = require("./routes/studentProfile.routes");
 
+const { globalLimiter } = require("./middlewares/rateLimiter");
+
 const app = express();
 
-// ── MIDDLEWARES ──────────────────────────────────────────────────
+//  ------------ MIDDLEWARES ------------------------------
+
+app.use(globalLimiter);
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(
@@ -28,7 +34,8 @@ app.use(
   }),
 );
 
-// ── ROUTES ───────────────────────────────────────────────────────
+// ----------------- ROUTES-----------------------------------------------------
+
 app.use("/api/auth", authRoutes);
 app.use("/api/owner", ownerRoutes);
 app.use("/api/owner/floors", floorSeatRoutes);
