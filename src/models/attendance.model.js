@@ -56,7 +56,7 @@ const attendanceSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// ── INDEXES ──────────────────────────────────────────────────────
+// -------------------- INDEXES ------------------------------
 
 attendanceSchema.index(
   { studentId: 1, bookingId: 1, date: 1 },

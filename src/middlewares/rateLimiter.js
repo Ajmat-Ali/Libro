@@ -11,7 +11,7 @@ const globalLimiter = rateLimit({
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5,
+  max: 6,
   message: {
     status: "error",
     message: "Rate limit exceed on auth, please try again after 15 minutes",

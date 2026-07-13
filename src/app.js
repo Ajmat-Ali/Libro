@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const helmet = require("helmet");
 
 const authRoutes = require("./routes/auth.routes");
 const ownerRoutes = require("./routes/owner.routes");
@@ -21,18 +22,20 @@ const { globalLimiter } = require("./middlewares/rateLimiter");
 
 const app = express();
 
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  }),
+);
+
 //  ------------ MIDDLEWARES ------------------------------
+app.use(helmet());
 
 app.use(globalLimiter);
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL, // e.g. http://localhost:5001
-    credentials: true, // allows cookies to be sent
-  }),
-);
 
 // ----------------- ROUTES-----------------------------------------------------
 

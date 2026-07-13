@@ -10,7 +10,7 @@ const markManualAttendance = async (req, res) => {
       return res.status(404).json({ message: "Library not found." });
     }
 
-    // ------------------- Get Body dat and extract ------------
+    // ------------------- Get Body date and extract ------------
     const { studentId, bookingId, date } = req.body;
 
     if (!studentId || !bookingId || !date) {
@@ -38,6 +38,7 @@ const markManualAttendance = async (req, res) => {
       startDate: { $lte: endOfDay },
       endDate: { $gte: startOfDay },
     });
+
     if (!booking) {
       return res.status(404).json({
         message: "Active booking not found for this student.",

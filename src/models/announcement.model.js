@@ -11,7 +11,6 @@ const announcementSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: [true, "Posted by reference is required"],
-      // Always owner/admin — only they can post announcements
     },
     title: {
       type: String,

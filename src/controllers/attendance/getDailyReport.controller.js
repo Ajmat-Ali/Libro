@@ -47,6 +47,7 @@ const getDailyReport = async (req, res) => {
 
     // -------------------- Lookup chain -------------------
     const attendanceMap = {};
+
     attendanceRecords.forEach((record) => {
       attendanceMap[record.bookingId.toString()] = record.entryTime;
     });
@@ -69,7 +70,6 @@ const getDailyReport = async (req, res) => {
           ? `${booking.timeSlotId.name} ${booking.timeSlotId.startTimeDisplay} - ${booking.timeSlotId.endTimeDisplay}`
           : "N/A",
         status: isPresent ? "present" : "absent",
-        // If present → show what time they arrived
         entryTime: isPresent ? attendanceMap[bookingId] : null,
       };
     });
