@@ -1,5 +1,6 @@
 const express = require("express");
 const { authLimiter } = require("../middlewares/rateLimiter");
+const { uploadFields } = require("../middlewares/uploadProfileID.middleware");
 
 const router = express.Router();
 const {
@@ -18,7 +19,7 @@ const {
 const auth = require("../middlewares/auth.middleware");
 
 router.post("/register-owner", authLimiter, registerOwner);
-router.post("/register-student", authLimiter, registerStudent);
+router.post("/register-student", authLimiter, uploadFields, registerStudent);
 router.post("/verify-email", authLimiter, verifyEmail);
 router.post("/resend-otp", authLimiter, resendOtp);
 router.post("/login", authLimiter, login);

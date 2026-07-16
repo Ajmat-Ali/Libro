@@ -31,9 +31,7 @@ app.use(
 
 //  ------------ MIDDLEWARES ------------------------------
 app.use(helmet());
-
 app.use(globalLimiter);
-
 app.use(express.json());
 app.use(cookieParser());
 

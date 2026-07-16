@@ -4,6 +4,7 @@ const StudentProfile = require("../../models/studentProfile.model");
 const bcrypt = require("bcrypt");
 const { ROLES, SALT_ROUND } = require("../../constants/index");
 const { sendEmail } = require("../../utils/sendEmail");
+const uploadToCloudinary = require("../../utils/uploadToCloudinary");
 
 const registerStudent = async (req, res) => {
   try {
@@ -36,6 +37,15 @@ const registerStudent = async (req, res) => {
     // 4. hash the password
     const hashedPassword = await bcrypt.hash(req.body.password, SALT_ROUND);
 
+    // 5.0 --------------- ProfilePic and ID Proof store ----------------
+    const profilePicFile = req.files["profilePic"]?.[0];
+    const idProofFile = req.files["idProof"]?.[0];
+
+    const [profilePicResult, idProofResult] = await Promise.all([
+      uploadToCloudinary(profilePicFile.buffer, "profile-pics"),
+      uploadToCloudinary(idProofFile.buffer, "id-proofs"),
+    ]);
+
     // 4. create student in DB
     const student = await User.create({
       firstName: req.body.firstName.toLowerCase().trim(),
@@ -51,6 +61,8 @@ const registerStudent = async (req, res) => {
       userId: student._id,
       phone: student.phone,
       address: req.body.address.trim() ? req.body.address.trim() : null,
+      photo: profilePicResult.secure_url,
+      idProof: idProofResult.secure_url,
     });
 
     // 6. generate OTP

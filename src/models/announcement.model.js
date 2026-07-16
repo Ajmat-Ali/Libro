@@ -33,11 +33,6 @@ const announcementSchema = new mongoose.Schema(
         message: "{VALUE} is not a valid priority",
       },
       default: "normal",
-      // normal    → general info (e.g. "Library closed Sunday")
-      // important → needs attention (e.g. "Fee due reminder")
-      // urgent    → immediate action (e.g. "Library closed today")
-      // Frontend shows different colors per priority
-      // urgent = red, important = yellow, normal = blue
     },
     targetAudience: {
       type: String,
