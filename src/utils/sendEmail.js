@@ -60,7 +60,7 @@ const sendEmail = async (to, subject, html) => {
     await axios.post(
       "https://api.brevo.com/v3/smtp/email",
       {
-        sender: { name: "Libro Library", email: process.env.EMAIL_USER }, // must be the verified sender
+        sender: { name: "Libro Library", email: process.env.EMAIL_USER },
         to: [{ email: to }],
         subject,
         htmlContent: html,
