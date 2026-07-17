@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const { ROLES, SALT_ROUND } = require("../../constants/index");
 const { sendEmail } = require("../../utils/sendEmail");
 const uploadToCloudinary = require("../../utils/uploadToCloudinary");
+const { endMarkings } = require("pdfkit/js/pdfkit.standalone");
 
 const registerStudent = async (req, res) => {
   try {
@@ -112,6 +113,7 @@ const registerStudent = async (req, res) => {
       return res.status(500).json({
         message:
           "Failed to send verification email. Please try registering again.",
+        error: emailError.message,
       });
     }
 
