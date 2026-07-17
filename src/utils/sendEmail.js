@@ -1,7 +1,24 @@
 const nodemailer = require("nodemailer");
 
+const dns = require("dns");
+
+dns.setDefaultResultOrder("ipv4first");
+
+const nodemailer = require("nodemailer");
+
+// const transporter = nodemailer.createTransport({
+//   service: "Gmail",
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+//   },
+// });
+
 const transporter = nodemailer.createTransport({
-  service: "Gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  requireTLS: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
