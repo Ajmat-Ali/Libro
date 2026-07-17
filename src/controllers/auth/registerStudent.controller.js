@@ -114,6 +114,7 @@ const registerStudent = async (req, res) => {
         message:
           "Failed to send verification email. Please try registering again.",
         error: emailError.message,
+        pureError: error,
       });
     }
 
