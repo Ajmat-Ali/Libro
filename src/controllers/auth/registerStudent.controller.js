@@ -41,10 +41,19 @@ const registerStudent = async (req, res) => {
     const profilePicFile = req.files["profilePic"]?.[0];
     const idProofFile = req.files["idProof"]?.[0];
 
-    const [profilePicResult, idProofResult] = await Promise.all([
-      uploadToCloudinary(profilePicFile.buffer, "profile-pics"),
-      uploadToCloudinary(idProofFile.buffer, "id-proofs"),
-    ]);
+    let profilePicResult;
+    let idProofResult;
+
+    if (profilePicFile) {
+      profilePicResult = await uploadToCloudinary(
+        profilePicFile.buffer,
+        "profile-pics",
+      );
+    }
+
+    if (idProofFile) {
+      idProofResult = await uploadToCloudinary(idProofFile.buffer, "id-proofs");
+    }
 
     // 4. create student in DB
     const student = await User.create({
@@ -61,8 +70,8 @@ const registerStudent = async (req, res) => {
       userId: student._id,
       phone: student.phone,
       address: req.body.address.trim() ? req.body.address.trim() : null,
-      photo: profilePicResult.secure_url,
-      idProof: idProofResult.secure_url,
+      photo: profilePicResult && profilePicResult.secure_url,
+      idProof: idProofResult && idProofResult.secure_url,
     });
 
     // 6. generate OTP

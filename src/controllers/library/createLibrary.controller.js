@@ -27,7 +27,7 @@ const createLibrary = async (req, res) => {
     }
 
     // -------------- Don't create more than one library ----------------
-    const doesLibExist = await Library.find();
+    const doesLibExist = await Library.findOne();
 
     if (doesLibExist) {
       return res.status(409).json({ message: "Library already exist" });
