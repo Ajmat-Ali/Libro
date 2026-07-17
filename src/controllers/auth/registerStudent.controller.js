@@ -109,12 +109,12 @@ const registerStudent = async (req, res) => {
       console.log(
         "Email sending failed, rollback completed:",
         emailError.message,
+        emailError,
       );
       return res.status(500).json({
         message:
           "Failed to send verification email. Please try registering again.",
         error: emailError.message,
-        pureError: emailError,
       });
     }
 
