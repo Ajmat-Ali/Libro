@@ -114,7 +114,7 @@ const registerStudent = async (req, res) => {
         message:
           "Failed to send verification email. Please try registering again.",
         error: emailError.message,
-        pureError: error,
+        pureError: emailError,
       });
     }
 
@@ -124,7 +124,8 @@ const registerStudent = async (req, res) => {
   } catch (error) {
     console.log("Error in registerStudent:", error.message);
     return res.status(500).json({
-      message: "An error occurred while registering the student.",
+      message:
+        "An error occurred while registering the student. " + error.message,
     });
   }
 };
