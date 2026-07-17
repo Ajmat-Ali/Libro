@@ -5,7 +5,6 @@ const bcrypt = require("bcrypt");
 const { ROLES, SALT_ROUND } = require("../../constants/index");
 const { sendEmail } = require("../../utils/sendEmail");
 const uploadToCloudinary = require("../../utils/uploadToCloudinary");
-const { endMarkings } = require("pdfkit/js/pdfkit.standalone");
 
 const registerStudent = async (req, res) => {
   try {
