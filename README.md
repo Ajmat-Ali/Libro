@@ -1,94 +1,177 @@
 # Libro
 
--- TOday built---
+Libro is a full-stack library management system built to manage library operations for multiple user roles such as owners, members/students, and guards. The platform supports library setup, floor and seat management, booking, payments, QR-based attendance, and role-based dashboards.
 
-- CRUD Floors --**\*\*\*\***\*\***\*\*\*\***\_**\*\*\*\***\*\***\*\*\*\*** Pushed on githun
-- CRUD seats **\*\*\*\***\*\*\*\***\*\*\*\***\_\_\_**\*\*\*\***\*\*\*\***\*\*\*\*** NEED to test APIs on postman
+It was developed as a practical, real-world project to simulate how a modern library or study-center management system would work in production.
 
-<!-- ------------- syncPlansForLibrary  -->
+## Project Overview
 
-``
+Libro helps a library owner manage:
 
-1. check Library exist
-   - existingLibrary
+- library setup and configuration
+- floors and seat layouts
+- time slots and pricing plans
+- member registration and approvals
+- seat bookings
+- payments and fee tracking
+- QR code generation for membership and attendance
+- attendance tracking with guard scan support
 
-2. Find seat types that ACTUALLY EXIST in this library
-   Seat.distinct("seatType", { libraryId }); (if length ===0 return)
+The system is designed around three main user roles:
 
-3. FInd all slots that presents
-   Slots.find() (if slots.length===0 return)
+- Owner/Admin: full control of the platform
+- Member/Student: can register, view dashboards, book seats, and manage personal activity
+- Guard: can scan QR codes and mark attendance quickly
 
-4)  run loop over slots and
-    - Inner loop on seatType.
+## What This Project Is About
 
-    for(let slot of slots){
-    const durationHr= timeSlot.durationMinutes / 60
+This project aims to solve the problem of manually managing a library’s day-to-day operations. Instead of handling everything through spreadsheets or paper records, this system provides a centralized digital platform for:
 
-         for(let seatType of existingSeatTypes){
+- seat allocation
+- membership management
+- booking workflows
+- attendance tracking
+- payment recording
+- automated QR-based check-ins
 
-             const rate = existingLibrary.horlyRates[seatType]
-             if(!rate || rate===0) continue
+## Key Features
 
-             const totalPrice = rate * durationHr
+### 1. Authentication and Role-Based Access
 
-             update await Plan.findOneAndUpdate({
-                 libraryId:existingLibrary._id,
-                 timeSlotId:slot._id,
-                 seatType
-             },{
-                name:`${seatType} - ${slot.name}`,
-                durationType:"monthly",
-                calculatedPrice:totalPrice,
-                isActive:true
-             },{{ upsert: true, new: true }})
-         }
+- owner/admin registration and login
+- member/student registration and approval flow
+- secure authentication using JWT
+- role-based access control for different modules
 
-    }
+### 2. Library Setup
 
-``
+- library profile creation and management
+- opening/closing time configuration
+- working day and holiday setup
 
-> 11-05-2026| 8:16PM
+### 3. Floor and Seat Management
 
-Member API
+- create, update, and delete floors
+- manage seats by floor and seat type
+- visual seat layout support
 
-# > 12-05-2026 | Booking
+### 4. Booking System
 
-### config
+- student/member book seats
+- seat availability management
+- booking history and status tracking
 
-- razorpay
+### 5. Payment and Membership Management
 
-### Controller
+- plan and pricing management
+- payment recording
+- fee status tracking
+- membership lifecycle support
 
-- ownerBooking (Fixed and tested in postman)
-- studentBooking
-- payment (Continue) tomorrow
+### 6. QR-Based Attendance
 
-### utils
+- QR code generation for members
+- scan-based attendance tracking by guard
+- entry log management
 
-- checkOverlap
-- generateQR.js
+### 7. Dashboard and Reporting
 
-### validator
+- owner dashboard with key stats
+- reporting support for attendance, payments, and active usage
 
-- booking.validator.js
+## Tech Stack
 
---> Fixed update library to create sync plan
+- Backend: Node.js + Express.js
+- Database: MongoDB + Mongoose
+- Authentication: JWT, bcrypt
+- File Uploads: Multer + Cloudinary
+- Payments: Razorpay
+- QR: qrcode
+- PDF Generation: PDFKit
+- Security: Helmet, CORS, Express Rate Limiting
+- Dev Tooling: Nodemon
 
-# payment API:-
+## Project Structure
 
-- recordCashPayment is done including testing ✅
+- src/app.js: main Express application setup
+- src/routes: API routes for auth, bookings, payments, QR, attendance, and dashboard
+- src/controllers: business logic for each domain
+- src/models: MongoDB schemas for users, bookings, payments, seats, attendance, and more
+- src/middlewares: authentication, upload, rate limiting, and access control
+- src/config: database, Cloudinary, and payment configuration
 
-continue --> ownerQR
+## How the System Works
 
-<!-- ------------------------ -->
+1. The owner registers and sets up the library.
+2. Floors, seats, slots, and pricing plans are created.
+3. Members register and wait for approval.
+4. Approved members can browse available seats and place booking.
+5. The owner manages bookings.
+6. Attendance is recorded through QR scanning by guards.
+7. Payments and membership statuses are tracked in the system.
 
-16/05/26
+## Installation and Setup
 
-getMyAttendance :=> Continue tomorrow
+### Prerequisites
 
-<!-- ------------------------------------------------------------------------- -->
-<!-- ------------------------------------------------------------------------- -->
-<!-- ------------------------------------------------------------------------- -->
-<!-- ------------------------------------------------------------------------- -->
-<!-- ------------------------------------------------------------------------- -->
-<!-- ------------------------------------------------------------------------- -->
+- Node.js
+- MongoDB
+- npm
+
+### Steps
+
+1. Clone the repository
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Create a .env file with the required environment variables:
+
+```env
+PORT=2020
+MONGO_URI=your_mongodb_connection_string
+FRONTEND_URL=http://localhost:3000
+JWT_ACCESS_SECRET=your_access_secret
+JWT_REFRESH_SECRET=your_refresh_secret
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+RAZORPAY_KEY_ID=your_razorpay_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_key_secret
+RAZORPAY_WEBHOOK_SECRET=your_webhook_secret
+NODE_ENV=development
+```
+
+4. Run the server:
+
+```bash
+npm run dev
+```
+
+The server will start on the configured port.
+
+## What I Built / Implemented
+
+This project includes the core backend modules for:
+
+- authentication and authorization
+- library configuration
+- floor and seat management
+- booking workflow
+- payment integration
+- QR generation and attendance handling
+- role-based access for owners, students, and guards
+
+I focused on building a practical, scalable backend architecture that can support real-world library operations.
+
+## Future Enhancements
+
+Possible next steps for the project:
+
+- add advanced analytics and charts
+- strengthen admin reporting
+- add automated notifications and reminders
+- Build Frontend for Member
+- flexible booking for any number of days
