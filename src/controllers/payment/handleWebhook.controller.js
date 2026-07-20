@@ -24,7 +24,7 @@ const handleWebhook = async (req, res) => {
 
     // ------------------- Verify signature -------------------------
     const isValidSignature = validateWebhookSignature(
-      JSON.stringify(req.body),
+      req.body,
       webhookSignature,
       process.env.RAZORPAY_WEBHOOK_SECRET,
     );
@@ -34,14 +34,16 @@ const handleWebhook = async (req, res) => {
     }
 
     //----------------- check even type -----------------------
-    const eventType = req.body.event;
+    const event = JSON.parse(req.body);
+
+    const eventType = event.event;
 
     if (eventType !== "payment.captured") {
       return res.status(200).json({ received: true });
     }
 
     // --------------------- Get payment details -------------------
-    const paymentEntity = req.body.payload.payment.entity;
+    const paymentEntity = event.payload.payment.entity;
     const razorpayPaymentId = paymentEntity.id; // e.g. "pay_Xyz789"
     const razorpayOrderId = paymentEntity.order_id;
 
@@ -109,9 +111,9 @@ const handleWebhook = async (req, res) => {
     await QRCode.create({
       bookingId: booking._id,
       studentId: studentId,
-      token: uuidv4(), // unique random token
+      token: uuidv4(),
       status: "active",
-      expiresAt: new Date(endDate), // QR valid until booking ends
+      expiresAt: new Date(endDate),
     });
 
     // ------------- return success message with 200 -------------------------

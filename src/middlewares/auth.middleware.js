@@ -4,6 +4,7 @@ const User = require("../models/user.model");
 const auth = async (req, res, next) => {
   try {
     // 1 Get authorization
+
     const authorizationToken = req.headers.authorization;
     if (!authorizationToken || !authorizationToken.startsWith("Bearer")) {
       return res.status(401).json({ message: "Token is required" });

@@ -85,7 +85,7 @@ paymentSchema.index({ libraryId: 1, status: 1, paidAt: 1 });
 
 paymentSchema.index({ studentId: 1, status: 1 });
 
-paymentSchema.index({ razorpayOrderId: 1 });
+paymentSchema.index({ razorpayOrderId: 1, unique: true });
 
 const Payment = mongoose.model("Payment", paymentSchema);
 module.exports = Payment;

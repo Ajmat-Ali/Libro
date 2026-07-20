@@ -3,7 +3,7 @@ const Library = require("../../models/library.model");
 
 const getAllFloor = async (req, res) => {
   try {
-    const existingLibrary = await Library.findOne({ ownerId: req.user._id });
+    const existingLibrary = await Library.findOne({});
 
     if (!existingLibrary) {
       return res.status(404).json({ message: "Library not found" });

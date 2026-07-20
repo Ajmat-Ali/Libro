@@ -1,5 +1,3 @@
-// src/validators/booking/booking.validator.js
-
 const validateCreateOwnerBooking = (data) => {
   const errors = {};
 
@@ -14,9 +12,6 @@ const validateCreateOwnerBooking = (data) => {
   if (!data.timeSlotId || data.timeSlotId.trim() === "") {
     errors.timeSlotId = "Time slot is required";
   }
-
-  // planId REMOVED — backend derives it automatically
-  // User cannot send planId anymore
 
   if (!data.startDate || data.startDate.toString().trim() === "") {
     errors.startDate = "Start date is required";
@@ -46,8 +41,6 @@ const validateInitiateStudentBooking = (data) => {
   if (!data.timeSlotId || data.timeSlotId.toString().trim() === "") {
     errors.timeSlotId = "Time slot is required";
   }
-
-  // planId REMOVED here too
 
   if (!data.startDate || data.startDate.toString().trim() === "") {
     errors.startDate = "Start date is required";

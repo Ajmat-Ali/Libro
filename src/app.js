@@ -17,12 +17,15 @@ const ownerQrRoutes = require("./routes/ownerQR.routes");
 const attendanceRoutes = require("./routes/attendance.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
 const studentProfileRoutes = require("./routes/studentProfile.routes");
+const studentseatGrid = require("./routes/student.routes");
 
 const { globalLimiter } = require("./middlewares/rateLimiter");
 
 const app = express();
 
-app.set("trust proxy", 1);
+app.use("/api/payments/webhook", express.raw({ type: "application/json" }));
+
+// app.set("trust proxy", 1);
 
 console.log(process.env.FRONTEND_URL);
 
@@ -55,5 +58,6 @@ app.use("/api/owner", ownerQrRoutes);
 app.use("/api", attendanceRoutes);
 app.use("/api", dashboardRoutes);
 app.use("/api/student", studentProfileRoutes);
+app.use("/api/student", studentseatGrid);
 
 module.exports = app;

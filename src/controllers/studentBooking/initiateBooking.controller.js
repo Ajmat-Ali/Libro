@@ -54,8 +54,6 @@ const initiateBooking = async (req, res) => {
     });
 
     if (!plan) {
-      // This means owner hasn't set hourlyRate for this seat type yet
-      // Or the plan was manually disabled
       return res.status(400).json({
         message: `No active plan found for "${seat.seatType}" seat with "${timeSlot.name}" slot. Please check your plan settings.`,
       });
@@ -107,10 +105,8 @@ const initiateBooking = async (req, res) => {
     const razorpayOrder = await razorpayInstance.orders.create({
       amount: amountInPaise,
       currency: "INR",
-      receipt: `rcpt_${Date.now()}`, // unique receipt ID
+      receipt: `rcpt_${Date.now()}`,
       notes: {
-        // Storing all booking details here
-        // Webhook will read these to create the actual booking
         studentId: req.user.id.toString(),
         libraryId: library._id.toString(),
         seatId: seat._id.toString(),

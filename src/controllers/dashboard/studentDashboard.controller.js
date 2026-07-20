@@ -17,7 +17,6 @@ const studentDashboard = async (req, res) => {
 
     // ----------------------------- Run prallel query for get all data at once ------------
     const [activeBookings, attendanceToday, library] = await Promise.all([
-      // All active bookings for this student
       Booking.find({
         studentId: req.user._id,
         status: "active",
@@ -27,17 +26,15 @@ const studentDashboard = async (req, res) => {
         .populate("timeSlotId", "name startTimeDisplay endTimeDisplay")
         .sort({ endDate: 1 }),
 
-      // Today's attendance records for this student
       Attendance.find({
         studentId: req.user._id,
         date: { $gte: todayStart, $lte: todayEnd },
       }).populate("timeSlotId", "name"),
 
-      // Library info (for name, timings)
       Library.findOne({}, "name timings workingDays"),
     ]);
 
-    // ------------- For each active booking → get payment status + QR info + days left ----------------
+    // ------------- For each active booking -> get payment status + QR info + days left ----------------
     const bookingDetails = await Promise.all(
       activeBookings.map(async (booking) => {
         const [payment, qrCode] = await Promise.all([
@@ -58,7 +55,10 @@ const studentDashboard = async (req, res) => {
         return {
           bookingId: booking._id,
           seat: booking.seatId
-            ? `${booking.seatId.seatLabel} (${booking.seatId.seatType})`
+            ? {
+                seatLabel: booking.seatId.seatLabel,
+                seatType: booking.seatId.seatType,
+              }
             : "N/A",
           slot: booking.timeSlotId
             ? {
@@ -69,7 +69,6 @@ const studentDashboard = async (req, res) => {
           startDate: booking.startDate,
           endDate: booking.endDate,
           daysLeft: daysLeft > 0 ? daysLeft : 0,
-          // Alert if expiring soon
           expiringSoon: daysLeft <= 7,
           payment: {
             status: payment ? payment.status : "not_found",

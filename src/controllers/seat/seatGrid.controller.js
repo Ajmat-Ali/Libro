@@ -48,7 +48,7 @@ const seatGrid = async (req, res) => {
     }
 
     const library = await Library.findOne({
-      ownerId: req.user._id,
+      // ownerId: req.user._id,
     });
 
     if (!library) {
@@ -139,6 +139,7 @@ const seatGrid = async (req, res) => {
             .select(
               "-rejectedBy -rejectedAt -cancelledB -cancelledAt -cancelReason -createdAt -updatedAt -__v",
             );
+
           return booking;
         } catch (error) {
           console.log(error.message);
@@ -195,7 +196,7 @@ const seatGrid = async (req, res) => {
     const day = String(startOfDay.getDate()).padStart(2, "0");
     const queryDateString = `${year}-${month}-${day}`;
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Grid seat fetched successfully",
       data: {

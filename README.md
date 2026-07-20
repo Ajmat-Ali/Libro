@@ -175,3 +175,30 @@ Possible next steps for the project:
 - add automated notifications and reminders
 - Build Frontend for Member
 - flexible booking for any number of days
+
+## Why This Project Is Strong for Interviews
+
+This project demonstrates:
+
+- end-to-end full-stack development thinking
+- backend API design and modular architecture
+- authentication and authorization implementation
+- multi-role system design
+- real-world business workflow modeling
+- integration with third-party services like Razorpay and Cloudinary
+- problem-solving around operational workflows rather than just basic CRUD
+
+### Interview Summary You Can Use
+
+“I built Libro, a library management platform designed for owners, members, and guards. The project includes role-based access, seat booking flow, member management, payments, QR-based attendance, and library setup modules. I implemented the backend architecture using Node.js, Express, MongoDB, and several integrations such as Razorpay and Cloudinary. The project reflects my ability to design practical systems for real-world business operations and manage complex workflows through a single platform.”
+
+## Conclusion
+
+Libro is a strong example of a business-oriented backend project that combines multiple real-world features into one system. It is suitable for showcasing full-stack development skills, API design, database modeling, authentication, and industry-style workflow implementation.
+
+<!-- ================================== -->
+
+# What has changed
+
+- cookie sameSite changed fro none to strict
+- .env variable change from deployed to local
