@@ -195,10 +195,3 @@ This project demonstrates:
 ## Conclusion
 
 Libro is a strong example of a business-oriented backend project that combines multiple real-world features into one system. It is suitable for showcasing full-stack development skills, API design, database modeling, authentication, and industry-style workflow implementation.
-
-<!-- ================================== -->
-
-# What has changed
-
-- cookie sameSite changed fro none to strict
-- .env variable change from deployed to local
