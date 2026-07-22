@@ -65,7 +65,12 @@ const resendOtp = async (req, res) => {
         .json({ message: "Something went wrong, Please try again later" });
     }
 
-    return res.status(200).json({ message: "OTP resent successfully" });
+    return res
+      .status(200)
+      .json({
+        message: "OTP resent successfully",
+        ...(process.env.SHOW_OTP_IN_RESPONSE === "true" && { devOtp: otp }),
+      });
   } catch (error) {
     console.log("Failed to send otp " + error.message);
     return res

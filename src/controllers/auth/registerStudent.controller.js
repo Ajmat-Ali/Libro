@@ -119,7 +119,8 @@ const registerStudent = async (req, res) => {
 
     return res.status(201).json({
       message: "Registration successful. Please check your email for OTP.",
-      otp: otp,
+
+      ...(process.env.SHOW_OTP_IN_RESPONSE === "true" && { devOtp: otp }),
     });
   } catch (error) {
     console.log("Error in registerStudent:", error.message);
