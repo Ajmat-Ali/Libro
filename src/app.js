@@ -25,8 +25,6 @@ const app = express();
 
 app.use("/api/payments/webhook", express.raw({ type: "application/json" }));
 
-// app.set("trust proxy", 1);
-
 console.log(process.env.FRONTEND_URL);
 
 app.use(
@@ -43,6 +41,14 @@ app.use(express.json());
 app.use(cookieParser());
 
 // ----------------- ROUTES-----------------------------------------------------
+
+app.use("/", (req, res) => {
+  try {
+    res.status(200).json({ message: "Healthy Route" });
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong on healthy route" });
+  }
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/owner", ownerRoutes);
