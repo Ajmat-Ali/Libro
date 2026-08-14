@@ -62,7 +62,7 @@ const studentProfileSchema = new mongoose.Schema(
 
     approvalStatus: {
       type: String,
-      default: "pending",
+      default: "approved",
       enum: {
         values: ["pending", "approved", "rejected"],
         message: "{VALUE} is not a valid approval status",
