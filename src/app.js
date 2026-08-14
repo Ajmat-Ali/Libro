@@ -42,7 +42,7 @@ app.use(cookieParser());
 
 // ----------------- ROUTES-----------------------------------------------------
 
-app.use("/", (req, res) => {
+app.use("/healthy-route", (req, res) => {
   try {
     res.status(200).json({ message: "Healthy Route" });
   } catch (error) {
