@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const { ROLES, SALT_ROUND } = require("../../constants/index");
 const { sendEmail } = require("../../utils/sendEmail");
 const uploadToCloudinary = require("../../utils/uploadToCloudinary");
+const generateMembershipId = require("../../utils/generateMembershipId");
 
 const registerStudent = async (req, res) => {
   try {
@@ -72,6 +73,7 @@ const registerStudent = async (req, res) => {
       address: req.body.address.trim() ? req.body.address.trim() : null,
       photo: profilePicResult && profilePicResult.secure_url,
       idProof: idProofResult && idProofResult.secure_url,
+      membershipId: generateMembershipId(),
     });
 
     // 6. generate OTP
