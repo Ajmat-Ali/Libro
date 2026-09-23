@@ -69,8 +69,9 @@ const addWalkInMember = async (req, res) => {
         `,
       );
     } catch (error) {
-      console.error("Walk-in email failed:", emailErr.message);
+      console.error("Walk-in email failed:", error.message);
     }
+
     return res.status(201).json({
       message: "Walk-in member added successfully.",
       member: {
